@@ -1,4 +1,5 @@
 ---
+import '../styles/base.css';
 ---
 
 <!DOCTYPE html>
@@ -9,63 +10,49 @@
 <title>Pagina niet gevonden - Gemeengoed</title>
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F1ECDD" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14170F" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/lora-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/public-sans-400.woff2" as="font" type="font/woff2" crossorigin>
 <style is:global>
-  @font-face {
-    font-family: 'Lora';
-    font-style: normal;
-    font-weight: 600;
-    font-display: swap;
-    src: url('/fonts/lora-600.woff2') format('woff2');
-  }
-
-  @font-face {
-    font-family: 'Public Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('/fonts/public-sans-400.woff2') format('woff2');
-  }
-
-  :root {
-    color-scheme: light dark;
-    --paper: #F1ECDD;
-    --ink: #20261B;
-    --ink-soft: #4B5240;
-    --moss: #5E6E37;
-    --ochre: #A9793C;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #14170F;
-      --ink: #ECE6D2;
-      --ink-soft: #B9B49E;
-      --moss: #9CB36B;
-      --ochre: #C79A5C;
-    }
-  }
-
   body {
-    margin: 0;
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6vh 6vw;
-    background: var(--paper);
+    padding: clamp(1.5rem, 5vh, 3.5rem) 6vw;
     color: var(--ink-soft);
-    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 1.0625rem;
-    line-height: 1.6;
     text-align: center;
-    -webkit-font-smoothing: antialiased;
+  }
+
+  /* The missing plot is the illustration: one empty, dashed parcel. */
+  main {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    max-width: 36rem;
+    padding: clamp(3rem, 12vw, 4.5rem) clamp(1.5rem, 6vw, 3rem);
+  }
+
+  .parcels {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .parcels path.accent {
+    stroke-dasharray: 4 4;
   }
 
   h1 {
-    font-family: 'Lora', Georgia, 'Times New Roman', serif;
+    font-family: var(--font-display);
     font-weight: 600;
     font-size: clamp(2rem, 6vw, 3rem);
     line-height: 1.2;
@@ -75,28 +62,13 @@
   }
 
   p { margin: 0; }
-
-  a {
-    color: var(--ink);
-    text-decoration-color: var(--ochre);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
-  }
-
-  a:hover {
-    color: var(--moss);
-    text-decoration-color: var(--moss);
-  }
-
-  a:focus-visible {
-    outline: 2px solid var(--moss);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
 </style>
 </head>
 <body>
   <main>
+    <svg class="parcels" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M6,14 L392,2 L398,186 L2,198 Z" class="accent" />
+    </svg>
     <h1>Dit perceel bestaat niet.</h1>
     <p>Terug naar <a href="/">Gemeengoed</a>.</p>
   </main>

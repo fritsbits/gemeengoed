@@ -1,0 +1,174 @@
+/* Shared by every page: fonts, colour tokens and the few global rules.
+   Light and dark values live here only, so the pages cannot drift apart. */
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/lora-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/lora-italic-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/public-sans-400.woff2') format('woff2');
+}
+
+/* Georgia, resized to Lora's measure, so a late font swap does not move a line.
+   Widths were measured against the page's own headings; the vertical metrics are Lora's. */
+@font-face {
+  font-family: 'Lora Fallback';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Georgia Bold'), local('Georgia-Bold');
+  size-adjust: 92.3%;
+  ascent-override: 109%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Lora Fallback';
+  font-style: italic;
+  font-weight: 500;
+  src: local('Georgia Italic'), local('Georgia-Italic');
+  size-adjust: 100.9%;
+  ascent-override: 99.7%;
+  descent-override: 27%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --paper: #F1ECDD;
+  --paper-alt: #E7E0C9;
+  --ink: #20261B;
+  --ink-soft: #4B5240;
+  --moss: #5E6E37;
+  --ochre: #A9793C;
+  --line: #C7BFA4;
+  --accent-opacity: 0.7;
+  --font-display: 'Lora', 'Lora Fallback', Georgia, 'Times New Roman', serif;
+  --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14170F;
+    --paper-alt: #1B1F14;
+    --ink: #ECE6D2;
+    --ink-soft: #B9B49E;
+    --moss: #9CB36B;
+    --ochre: #C79A5C;
+    --line: #4A4A38;
+    --accent-opacity: 0.8;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #14170F;
+  --paper-alt: #1B1F14;
+  --ink: #ECE6D2;
+  --ink-soft: #B9B49E;
+  --moss: #9CB36B;
+  --ochre: #C79A5C;
+  --line: #4A4A38;
+  --accent-opacity: 0.8;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* One link style for the whole site: ink text, ochre underline, moss on hover. */
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ochre);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--moss);
+  text-decoration-color: var(--moss);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition: color 0.15s ease-out, text-decoration-color 0.15s ease-out;
+  }
+}
+
+a:focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--moss);
+  color: var(--paper);
+}
+
+/* Parcel lines: always hairlines, whatever the drawing is stretched to. */
+.parcels {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.parcels path {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.parcels path.accent {
+  stroke: var(--ochre);
+  opacity: var(--accent-opacity);
+}
+
+/* Print is black on white whatever colour scheme is active. */
+@media print {
+  :root,
+  :root[data-theme="dark"],
+  :root:not([data-theme="light"]) {
+    --paper: #fff;
+    --ink: #000;
+    --ink-soft: #333;
+    --moss: #333;
+    --ochre: #666;
+    --line: #999;
+  }
+
+  .parcels { display: none; }
+}
