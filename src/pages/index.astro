@@ -60,413 +60,74 @@ const schema = {
 <link rel="preload" href="/fonts/lora-italic-500.woff2" as="font" type="font/woff2" crossorigin>
 <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
 <style is:global>
+  :root {
+    /* Few steps, steep contrast. The three poster sizes also listen to the viewport height,
+       so the name, the hook and "Wij wel." share the first screen on a low laptop. */
+    --fs-small: 0.875rem;
+    --fs-body: 1.0625rem;
+    --fs-lede: 1.25rem;
+    --fs-h3: 1.5rem;
+    --fs-statement: clamp(1.5rem, 2.7vw, 2.25rem);
+    --fs-h2: clamp(2rem, 5vw, 4rem);
+    --fs-hook: clamp(1.7rem, min(9.4vw, 9.2vh), 5.5rem);
+    --fs-name: clamp(2.5rem, min(12.6vw, 15vh), 9rem);
+    --fs-punch: clamp(3.5rem, min(17vw, 17.5vh), 10rem);
+    --fs-numeral: clamp(3rem, 6vw, 4.5rem);
+    --fs-year: clamp(3.5rem, min(11vw, 15vh), 7.5rem);
+
+    --pad: clamp(1.5rem, 5vw, 4rem);
+    --gap: clamp(1rem, 2.2vw, 2rem);
+    --gutter: clamp(0.625rem, 2vw, 1.75rem);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    /* One cut for every face on the page: a small parcel, never quite square. */
+    --cut-a: polygon(0 3%, 100% 0, 97% 100%, 2.5% 96.5%);
+    --cut-b: polygon(2% 0, 100% 2.5%, 98% 97%, 0 100%);
+  }
+
   body {
-    min-height: 100vh;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: clamp(2rem, 8vh, 5rem) 6vw clamp(1.5rem, 5vh, 3.5rem);
+    font-size: var(--fs-body);
   }
 
-  .wrap {
-    width: 100%;
-    max-width: 40rem;
-  }
-
-  .hero {
-    padding: 1.5rem 0 0;
-  }
-
-  /* The parcel drawing belongs to the masthead only, so no line ever crosses body copy. */
-  .masthead {
-    position: relative;
-    isolation: isolate;
-    text-align: center;
-  }
-
-  .masthead .parcels {
-    top: -2.5rem;
-    left: clamp(-4.5rem, -5vw, -1rem);
-    width: calc(100% + 2 * clamp(1rem, 5vw, 4.5rem));
-    height: calc(100% + 4.5rem);
-    -webkit-mask-image: linear-gradient(#000 40%, transparent);
-    mask-image: linear-gradient(#000 40%, transparent);
-  }
-
-  .eyebrow {
-    font-size: 0.8125rem;
-    color: var(--ink-soft);
-    letter-spacing: 0.01em;
-    margin: 0 0 1rem;
-  }
-
-  h1 {
+  h1, h2, h3 {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(2.5rem, 8vw, 4rem);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
-    margin: 0 0 1rem;
-    color: var(--ink);
-  }
-
-  .tagline {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 500;
-    font-size: clamp(1.1rem, 3vw, 1.35rem);
-    line-height: 1.35;
-    color: var(--moss);
     margin: 0;
     text-wrap: balance;
-  }
-
-  /* Each sentence of the tagline keeps its own line where the width allows it. */
-  .tagline span {
-    display: block;
-  }
-
-  /* Same left edge as the names in the register below. */
-  .intro {
-    margin-top: 2.5rem;
-    padding: 0 1.25rem;
-    font-size: 1.0625rem;
-    color: var(--ink-soft);
-  }
-
-  .intro p {
-    margin: 0 0 1rem;
-    text-wrap: pretty;
-  }
-
-  /* The opening line is the one to read first, so it speaks in the display face. */
-  .intro .lead {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1.25rem, 3.4vw, 1.4375rem);
-    line-height: 1.3;
-    color: var(--ink);
-    margin-bottom: 1.125rem;
-    text-wrap: balance;
-  }
-
-  .intro .answer {
-    color: var(--ink);
-  }
-
-  .intro .jump {
-    margin: 1.5rem 0 0;
-  }
-
-  .section {
-    margin-top: clamp(4rem, 10vh, 5.5rem);
-  }
-
-  .section-head {
-    padding: 0 1.25rem;
-  }
-
-  h2 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1.5rem, 4.4vw, 1.875rem);
-    line-height: 1.15;
-    letter-spacing: -0.005em;
-    margin: 0 0 0.875rem;
-    text-wrap: balance;
-  }
-
-  .section-head p {
-    margin: 0 0 1rem;
-    font-size: 1.0625rem;
-    color: var(--ink-soft);
-    text-wrap: pretty;
-  }
-
-  .section-head p:last-child {
-    margin-bottom: 0;
-  }
-
-  h3 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.125rem;
-    line-height: 1.3;
-    margin: 0;
-    text-wrap: balance;
-  }
-
-  /* Every list on the page is a register: hairlines above, between and below. */
-  .register {
-    margin-top: 1.75rem;
-    border-top: 1px solid var(--line);
-  }
-
-  .steps,
-  .works {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 0;
-  }
-
-  .step,
-  .work {
-    display: grid;
-    gap: 0 1rem;
-    padding: 1.25rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .step {
-    grid-template-columns: 2.25rem minmax(0, 1fr);
-  }
-
-  /* The order is the message here, so the numerals are set large enough to read as one. */
-  .step-n {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 500;
-    font-size: 1.75rem;
-    line-height: 1;
-    color: var(--ochre);
-    padding-top: 0.05em;
-  }
-
-  .step p,
-  .work p {
-    margin: 0.375rem 0 0;
-    color: var(--ink-soft);
-    text-wrap: pretty;
-  }
-
-  .work {
-    grid-template-columns: 6.5rem minmax(0, 1fr);
-  }
-
-  .work-when {
-    font-size: 0.8125rem;
-    line-height: 1.6;
-    letter-spacing: 0.01em;
-    color: var(--ink-soft);
-    padding-top: 0.2rem;
-  }
-
-  .work-when.now {
-    color: var(--moss);
-  }
-
-  .work h3 {
     -webkit-hyphens: manual;
     hyphens: manual;
   }
 
-  .work h3 a {
-    text-decoration-color: color-mix(in srgb, var(--ochre) 70%, transparent);
-  }
-
-  .work .work-fact {
-    color: var(--ink);
-    font-size: 0.9375rem;
-    margin-top: 0.625rem;
-  }
-
-  .work blockquote {
-    margin: 1rem 0 0;
-    padding: 0;
-  }
-
-  .work blockquote p {
-    quotes: '\201C' '\201D';
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 500;
-    font-size: 1.1875rem;
-    line-height: 1.35;
-    color: var(--moss);
+  p {
     margin: 0;
-    text-wrap: balance;
-  }
-
-  .work blockquote p::before { content: open-quote; }
-  .work blockquote p::after { content: close-quote; }
-
-  .work blockquote footer {
-    margin: 0.25rem 0 0;
-    text-align: left;
-    font-size: 0.8125rem;
-    color: var(--ink-soft);
-  }
-
-  .section-head .pair {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 500;
-    font-size: 1.125rem;
-    line-height: 1.35;
-    color: var(--moss);
-  }
-
-  .register-row {
-    display: flex;
-    border-bottom: 1px solid var(--line);
-  }
-
-  /* A column, so the mail and links sit on one line across both plots whatever the bio length. */
-  .plot {
-    flex: 1 1 50%;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 1.25rem 1.25rem 0.9rem;
-  }
-
-  .plot + .plot {
-    border-left: 1px solid var(--line);
-  }
-
-  .plot-head {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .plot-photo {
-    flex: none;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    object-fit: cover;
-    background: var(--paper-alt);
-    box-shadow: 0 0 0 1px var(--line);
-  }
-
-  .plot-name {
-    font-size: 1.0625rem;
-    line-height: 1.35;
-  }
-
-  .plot-role {
-    margin: 0;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    color: var(--ink-soft);
-  }
-
-  .plot-bio {
-    margin: 0 0 0.75rem;
-    font-size: 0.9375rem;
-    color: var(--ink-soft);
     text-wrap: pretty;
+    overflow-wrap: break-word;
   }
 
-  /* The mail takes its own row, the secondary links share the row below it. */
-  .plot-links {
+  ul, ol {
     list-style: none;
-    margin: auto 0 0;
+    margin: 0;
     padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: 1.125rem;
   }
 
-  .plot-links-mail {
-    flex: 0 0 100%;
+  /* Where hover cannot change the colour, because the link already has the ground's ink,
+     the underline does the work. */
+  [class*="ground-"] a:hover {
+    text-decoration-thickness: 2px;
   }
 
-  /* The padding makes the tap target, the list itself has no gap. */
-  .plot-mail,
-  .plot-secondary {
-    display: inline-block;
-    padding-block: 0.35rem;
+  .canvas {
+    max-width: calc(72rem + 2 * var(--pad));
+    margin-inline: auto;
+    padding-inline: var(--pad);
   }
 
-  /* Under keyboard focus the tap padding becomes margin, so the ring hugs the text
-     like on every other link and nothing moves. */
-  .plot-mail:focus-visible,
-  .plot-secondary:focus-visible {
-    padding-block: 0;
-    margin-block: 0.35rem;
-  }
-
-  .plot-mail {
-    font-size: 1rem;
-    overflow-wrap: anywhere;
-  }
-
-  .plot-secondary {
-    font-size: 0.875rem;
-    color: var(--ink-soft);
-    text-decoration-color: color-mix(in srgb, var(--ink-soft) 45%, transparent);
-  }
-
-  /* The page ends on the ask. It closes the sheet the way the masthead opens it:
-     the same parcel, turned over, so the accent line runs underneath. */
-  .invite {
+  /* A beat is one sheet. It clips, so the lines can run off it on every side. */
+  .beat {
     position: relative;
     isolation: isolate;
-    margin-top: clamp(4.5rem, 11vh, 6.5rem);
-    padding: 1rem 1.25rem 4.25rem;
-    text-align: center;
-    scroll-margin-top: 2rem;
-  }
-
-  .invite .parcels {
-    bottom: -0.5rem;
-    left: clamp(-4.5rem, -5vw, -1rem);
-    width: calc(100% + 2 * clamp(1rem, 5vw, 4.5rem));
-    height: calc(100% + 3rem);
-    transform: scaleY(-1);
-    -webkit-mask-image: linear-gradient(#000 35%, transparent 85%);
-    mask-image: linear-gradient(#000 35%, transparent 85%);
-  }
-
-  .invite h2 {
-    font-size: clamp(1.875rem, 6vw, 2.625rem);
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    margin-bottom: 1.125rem;
-  }
-
-  .invite p {
-    max-width: 31rem;
-    margin: 0 auto;
-    font-size: 1.125rem;
-    color: var(--ink-soft);
-    text-wrap: balance;
-  }
-
-  .cta {
-    display: inline-block;
-    margin-top: 1.75rem;
-    padding: 0.8rem 1.75rem;
-    border-radius: 999px;
-    background: var(--moss);
-    color: var(--paper);
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.125rem;
-    line-height: 1.3;
-    text-decoration: none;
-  }
-
-  .cta:hover {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .cta:active {
-    transform: translateY(1px);
-  }
-
-  .invite .cta-address {
-    margin-top: 0.75rem;
-    font-size: 0.9375rem;
-    overflow-wrap: anywhere;
-    -webkit-user-select: all;
-    user-select: all;
+    overflow: hidden;
+    overflow: clip;
+    background: var(--bg);
   }
 
   .visually-hidden {
@@ -481,55 +142,1060 @@ const schema = {
     border: 0;
   }
 
-  body > .wrap > footer {
-    margin-top: clamp(3.5rem, 9vh, 5rem);
+  /* A surveyed boundary: a hairline that runs off the sheet on both sides, slightly
+     off level, with the accent on the stretch that belongs to the content above it.
+     One pixel tall, not zero: an empty block lets its margins collapse through it. */
+  .boundary {
+    position: relative;
+    height: 1px;
+    rotate: -0.55deg;
+    transform-origin: 0 50%;
+  }
+
+  .boundary::before,
+  .boundary::after {
+    content: "";
+    position: absolute;
+  }
+
+  .boundary::before {
+    top: 0;
+    left: -100vw;
+    right: -100vw;
+    height: 1px;
+    background: var(--rule-c);
+  }
+
+  .boundary::after {
+    top: -0.5px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform-origin: 0 50%;
+  }
+
+  .boundary--plain::after {
+    display: none;
+  }
+
+  .boundary--falling {
+    rotate: 0.45deg;
+  }
+
+  /* A boundary stone marks every surveyed corner: a ring in the ground's ink,
+     filled with the ground, so the line stops at the post. */
+  .stone,
+  .step::after {
+    position: absolute;
+    z-index: 1;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 0 0 1.5px var(--fg);
+    translate: -50% -50%;
+    pointer-events: none;
+  }
+
+  /* On a boundary the posts stand where the side boundaries cross it. */
+  .boundary .stone {
+    top: 0.5px;
+    left: calc(-1 * var(--gutter));
+  }
+
+  .boundary .stone + .stone {
+    left: calc(100% + var(--gutter));
+  }
+
+  /* One button for the whole page, squared off like a stamp on a poster.
+     Each ground gives it a colourway. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.5rem;
+    padding: 0.375rem 1.5rem;
+    border: 1px solid var(--btn-line);
+    border-radius: 2px;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-lede);
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    background: var(--btn-bg-hover);
+    border-color: var(--btn-line-hover);
+    color: var(--btn-fg-hover);
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .ground-ink .btn {
+    --btn-bg: transparent;
+    --btn-fg: var(--on-deep);
+    --btn-line: var(--on-deep);
+    --btn-bg-hover: var(--dawn);
+    --btn-fg-hover: var(--on-dawn);
+    --btn-line-hover: var(--dawn);
+  }
+
+  .ground-dawn .btn {
+    --btn-bg: var(--on-dawn);
+    --btn-fg: var(--on-deep);
+    --btn-line: var(--on-dawn);
+    --btn-bg-hover: var(--on-deep);
+    --btn-fg-hover: var(--on-dawn);
+    --btn-line-hover: var(--on-dawn);
+  }
+
+  /* The face sits in the button's own corner, cut like the portraits further up. */
+  .btn--face {
+    padding-left: 0.375rem;
+  }
+
+  .btn-face {
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    object-fit: cover;
+    clip-path: var(--cut-a);
+  }
+
+  /* ---------- 1. Hero: the nameplate ---------- */
+
+  .hero {
+    padding-block: clamp(1.25rem, 3.5vh, 2.75rem) clamp(1.75rem, 4.5vh, 4rem);
+  }
+
+  .eyebrow {
+    font-size: var(--fs-small);
+    letter-spacing: 0.01em;
+    color: var(--fg-soft);
+    margin-bottom: clamp(0.75rem, 2.5vh, 2.25rem);
+  }
+
+  /* As wide as the name, so the ochre boundary measures exactly the wordmark. */
+  .nameplate {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  /* The side boundaries run off the top of the sheet and down to its lower edge. */
+  .nameplate::before,
+  .nameplate::after {
+    content: "";
+    position: absolute;
+    top: -40rem;
+    bottom: -40rem;
+    width: 1px;
+    background: var(--rule-c);
+    pointer-events: none;
+  }
+
+  .nameplate::before {
+    left: calc(-1 * var(--gutter));
+    rotate: 1.1deg;
+  }
+
+  .nameplate::after {
+    right: calc(-1 * var(--gutter));
+    rotate: -1.1deg;
+  }
+
+  h1 {
+    font-size: var(--fs-name);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    white-space: nowrap;
+  }
+
+  .hero .boundary {
+    margin-block: clamp(0.75rem, min(2.6vw, 2.4vh), 2.25rem) clamp(0.75rem, min(2.2vw, 2vh), 1.75rem);
+  }
+
+  /* No width of its own, so a long tagline never stretches the nameplate past the name. */
+  .tagline {
+    width: 0;
+    min-width: 100%;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.25rem, min(2.7vw, 3.6vh), 2.25rem);
+    line-height: 1.2;
+    color: var(--moss);
+    text-wrap: balance;
+  }
+
+  /* Each sentence of the tagline keeps its own line where the width allows it. */
+  .tagline span {
+    display: block;
+  }
+
+  /* ---------- 2. Opening: the night sheet ---------- */
+
+  .opening {
+    min-height: min(100svh, 62rem);
+    display: flex;
+    flex-direction: column;
+    padding-block: clamp(2rem, 5vh, 4.25rem) clamp(3.5rem, 9vh, 6rem);
+    border-block: 1px solid var(--night-edge);
+  }
+
+  .opening > .canvas {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(3rem, 8vh, 5rem);
+  }
+
+  .hook {
+    font-size: var(--fs-hook);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    overflow-wrap: break-word;
+  }
+
+  /* The peak of the page: nothing else is set this large. */
+  .hook .punch {
+    display: block;
+    margin-top: 0.12em;
+    font-style: italic;
+    font-weight: 500;
+    font-size: var(--fs-punch);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+  }
+
+  .opening-body .boundary {
+    margin-bottom: clamp(2rem, 5vh, 3rem);
+  }
+
+  .opening-body .problem {
+    color: var(--fg-soft);
+    max-width: 34rem;
+  }
+
+  .opening-body .answer {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-statement);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-top: 2rem;
+    text-wrap: balance;
+  }
+
+  .jump {
+    margin-top: 2rem;
+  }
+
+  /* ---------- 3. Aanpak: a sage plot laid on the paper ---------- */
+
+  /* The plot is wider than the text column. From desktop up the paper shows around it;
+     its text keeps the page's left edge whatever the margin. */
+  .aanpak {
+    --plot-m: 0px;
+    padding-block: var(--plot-m) clamp(3.5rem, 9vh, 6.5rem);
+  }
+
+  .aanpak-ground {
+    position: relative;
+    overflow: hidden;
+    overflow: clip;
+    width: calc(100% - 2 * var(--plot-m));
+    max-width: 84rem;
+    margin-inline: auto;
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    background: var(--bg);
+  }
+
+  .aanpak-ground > .canvas {
+    max-width: calc(72rem + 2 * (var(--pad) - var(--plot-m)));
+    padding-inline: calc(var(--pad) - var(--plot-m));
+  }
+
+  .aanpak-grid {
+    display: grid;
+    gap: 2.75rem clamp(2.5rem, 6vw, 6rem);
+  }
+
+  .aanpak h2 {
+    font-size: clamp(2rem, 3.8vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+
+  .aanpak h2 span {
+    display: block;
+  }
+
+  .aanpak h2 .turn {
+    color: var(--moss);
+  }
+
+  .aanpak .lede {
+    margin-top: clamp(1.25rem, 2.4vw, 2rem);
+    font-size: var(--fs-lede);
+    line-height: 1.5;
+    color: var(--fg-soft);
+    max-width: 30rem;
+  }
+
+  .steps {
+    position: relative;
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: clamp(3.5rem, 7vw, 5.5rem) minmax(0, 1fr);
+    padding-block: clamp(1.5rem, 2.8vw, 2.25rem) clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .step:last-child {
+    padding-bottom: 0;
+  }
+
+  /* Row boundaries overshoot the text block, like lines ruled past the corner of a plot.
+     Each one turns on its own post, so the post stays on the line. */
+  .step::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(-1 * var(--gutter));
+    right: calc(-1 * var(--gutter));
+    height: 1px;
+    background: var(--rule-c);
+    transform-origin: var(--gutter) 50%;
+  }
+
+  .step:nth-child(odd)::before { rotate: -0.18deg; }
+  .step:nth-child(even)::before { rotate: 0.14deg; }
+
+  .step::after {
+    content: "";
+    top: 0.5px;
+    left: 0;
+  }
+
+  /* The order is the message, so the numerals are figures, not bullets. */
+  .step-n,
+  .when-year,
+  .fig {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: lining-nums;
+  }
+
+  .step-n {
+    font-size: var(--fs-numeral);
+    line-height: 0.8;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+  }
+
+  .step h3 {
+    font-size: var(--fs-h3);
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+  }
+
+  .step p {
+    margin-top: 0.5rem;
+    color: var(--fg-soft);
+    max-width: 36rem;
+  }
+
+  /* ---------- 4. Werk: the proof, ranked ---------- */
+
+  .werk {
+    padding-block: clamp(4.5rem, 12vh, 8rem);
+  }
+
+  .werk h2,
+  .wie h2 {
+    font-size: var(--fs-h2);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+  }
+
+  .werk .lede {
+    margin-top: 1rem;
+    font-size: var(--fs-lede);
+    line-height: 1.5;
+    color: var(--fg-soft);
+    max-width: 26rem;
+  }
+
+  .werk .boundary {
+    margin-block: clamp(2rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .when {
+    font-size: var(--fs-small);
+    letter-spacing: 0.01em;
+    color: var(--fg-soft);
+  }
+
+  .when-word,
+  .when-year {
+    display: block;
+  }
+
+  .when-year {
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+    color: var(--accent);
+  }
+
+  .work h3 {
+    font-size: var(--fs-h3);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  /* A taller hit area for the product links without moving the heading. */
+  .work h3 a {
+    display: inline-block;
+    padding-block: 0.4rem;
+    margin-block: -0.4rem;
+  }
+
+  .work-text {
+    margin-top: 0.75rem;
+    color: var(--fg-soft);
+    max-width: 38rem;
+  }
+
+  /* Figures read as figures: the number takes the display size, the sentence follows it. */
+  .fact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-lede);
+    line-height: 1.3;
+    color: var(--fg);
+  }
+
+  .fig {
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+  }
+
+  .fact-text {
+    flex: 1 1 12rem;
+  }
+
+  .work--flagship .when-year { font-size: var(--fs-year); }
+  .work--flagship h3 { font-size: clamp(1.625rem, 7vw, 2.75rem); }
+  .work--flagship .fig { font-size: clamp(3.25rem, 7vw, 5.5rem); }
+  .work--flagship .when { margin-bottom: 1.25rem; }
+
+  .work--mid .when-year { font-size: clamp(3rem, 6vw, 4.5rem); }
+  .work--mid h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+  .work--mid .fig { font-size: clamp(2.25rem, 4vw, 3.25rem); }
+  .work--mid .when { margin-bottom: 1rem; }
+
+  .work--background .when-year { font-size: 2.25rem; }
+  .work--background .when { margin-bottom: 0.75rem; }
+  .work--background .fact { font-size: var(--fs-body); margin-top: 0.875rem; }
+
+  /* The user council's sentence gets a ground of its own, across the whole sheet. */
+  .quote {
+    position: relative;
+    margin: clamp(3rem, 7vw, 5rem) 0 0;
+    padding-block: clamp(3rem, 8vw, 6rem);
+    background: var(--band);
+    color: var(--on-deep);
+  }
+
+  .quote::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset-block: 0;
+    left: 50%;
+    width: 100vw;
+    translate: -50% 0;
+    background: var(--band);
+  }
+
+  .quote ::selection {
+    background: var(--on-deep);
+    color: var(--band);
+  }
+
+  .quote p {
+    quotes: '\201C' '\201D';
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.875rem, 5.6vw, 4.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .quote .q-open {
+    position: relative;
+  }
+
+  /* The opening mark hangs in the margin so the words keep the left edge. */
+  .quote .q-open::before {
+    content: open-quote;
+    position: absolute;
+    right: 100%;
+    margin-right: 0.04em;
+  }
+
+  .quote .q-close::after {
+    content: close-quote;
+  }
+
+  .quote footer {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+    font-size: var(--fs-body);
+  }
+
+  .quote footer::before {
+    content: "";
+    flex: none;
+    width: 2.5rem;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .works > .work + .work {
+    margin-top: clamp(3rem, 7vw, 4.5rem);
+  }
+
+  /* Not built yet, so its boundary is pegged out, not drawn. */
+  .work--next {
+    position: relative;
+    isolation: isolate;
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .work--next .parcels {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .work--next .parcels path {
+    stroke: var(--moss);
+    stroke-width: 1.25;
+    stroke-dasharray: 7 6;
+  }
+
+  .work--next .when {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.625rem, 3.2vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--moss);
+    margin-bottom: 1rem;
+  }
+
+  .work--next h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  /* ---------- 5. Wie: a drawn plan of two adjoining plots ---------- */
+
+  .wie {
+    padding-block: clamp(5rem, 14vh, 9rem) clamp(5rem, 13vh, 8.5rem);
+  }
+
+  /* The conviction is set large, next to the question it answers. */
+  .why {
+    margin-top: 1.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-statement);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .why .also {
+    display: block;
+    margin-top: 0.6em;
+    font-style: italic;
+    font-weight: 500;
+    font-size: var(--fs-h3);
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: var(--moss);
+  }
+
+  .pair {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    line-height: 1.25;
+    color: var(--moss);
+  }
+
+  /* Stacked plots share rows of equal height, so the shared boundary sits on the halfway line. */
+  .plan {
+    position: relative;
+    isolation: isolate;
+    margin-top: 1.5rem;
+    display: grid;
+    grid-auto-rows: 1fr;
+  }
+
+  .plan .parcels {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .plan-drawing--wide { display: none; }
+
+  .plan .parcels .plot-a { fill: var(--sheet); }
+  .plan .parcels .plot-b { fill: var(--sage); }
+
+  .plan .parcels path {
+    stroke: var(--rule-c);
+  }
+
+  .plan .parcels path.shared {
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+
+  .plan > .stone {
+    left: var(--x);
+    top: var(--y);
+  }
+
+  .plan > .stone:nth-of-type(1) { --x: 0%;    --y: 0.6%; }
+  .plan > .stone:nth-of-type(2) { --x: 100%;  --y: 0%; }
+  .plan > .stone:nth-of-type(3) { --x: 99%;   --y: 100%; }
+  .plan > .stone:nth-of-type(4) { --x: 1.2%;  --y: 99.4%; }
+  .plan > .stone:nth-of-type(5) { --x: 0.6%;  --y: 49.7%; }
+  .plan > .stone:nth-of-type(6) { --x: 99.5%; --y: 50.5%; }
+
+  /* A column, so the mail and links sit on one line across both plots whatever the bio length. */
+  .plot {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.75rem, 3.4vw, 3rem) clamp(1.25rem, 3.4vw, 3rem) clamp(1.25rem, 2.6vw, 2.25rem);
+  }
+
+  .plot-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: end;
+    gap: clamp(1rem, 2.2vw, 1.75rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .plot-photo {
+    display: block;
+    width: clamp(6.5rem, 16vw, 12.5rem);
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: var(--paper-alt);
+    clip-path: var(--cut-a);
+  }
+
+  .plot + .plot .plot-photo {
+    clip-path: var(--cut-b);
+  }
+
+  .plot-name {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .plot-role {
+    margin-top: 0.375rem;
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--fg-soft);
+  }
+
+  .plot-bio {
+    color: var(--fg-soft);
+    max-width: 32rem;
+    margin-bottom: 1rem;
+  }
+
+  /* The mail takes its own row, the secondary links share the row below it. */
+  .plot-links {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 1.25rem;
+  }
+
+  .plot-links-mail {
+    flex: 0 0 100%;
+  }
+
+  /* The padding makes the tap target, the list itself has no gap. */
+  .plot-mail,
+  .plot-secondary {
+    display: inline-block;
+    padding-block: 0.55rem;
+  }
+
+  /* Under keyboard focus the tap padding becomes margin, so the ring hugs the text
+     like on every other link and nothing moves. */
+  .plot-mail:focus-visible,
+  .plot-secondary:focus-visible {
+    padding-block: 0;
+    margin-block: 0.55rem;
+  }
+
+  .plot-mail {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.125rem;
+    overflow-wrap: anywhere;
+  }
+
+  .plot-secondary {
+    font-size: var(--fs-small);
+    color: var(--fg-soft);
+  }
+
+  /* ---------- 6. The ask: the morning sheet ---------- */
+
+  /* The page ends on the ask. The jump lands with the sheet's own edge at the top. */
+  .cta {
+    padding-block: clamp(5rem, 15vh, 10rem) clamp(3.5rem, 8vh, 5.5rem);
+    scroll-margin-top: 0;
     text-align: center;
-    font-size: 0.8125rem;
-    color: var(--ink-soft);
+  }
+
+  .invite {
+    position: relative;
+    max-width: 58rem;
+    margin-inline: auto;
+  }
+
+  /* The nameplate, turned over: the side boundaries come in from the top
+     and stop just past the closing line, where the posts stand. */
+  .invite::before,
+  .invite::after {
+    content: "";
+    position: absolute;
+    top: -40rem;
+    bottom: -2.25rem;
+    width: 1px;
+    background: var(--rule-c);
+    transform-origin: 50% 100%;
+    pointer-events: none;
+  }
+
+  .invite::before {
+    left: calc(-1 * var(--gutter));
+    rotate: -0.8deg;
+  }
+
+  .invite::after {
+    right: calc(-1 * var(--gutter));
+    rotate: 0.8deg;
+  }
+
+  .cta h2 {
+    font-size: clamp(2.25rem, 6vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    padding-inline: clamp(0.5rem, 3vw, 2rem);
+  }
+
+  .cta-say {
+    max-width: 34rem;
+    margin: clamp(1.25rem, 2.6vw, 2rem) auto 0;
+    padding-inline: clamp(0.5rem, 3vw, 2rem);
+    font-size: var(--fs-lede);
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .cta .btn {
+    margin-top: 2.25rem;
+  }
+
+  .cta-address {
+    margin-top: 0.875rem;
+    overflow-wrap: anywhere;
+    -webkit-user-select: all;
+    user-select: all;
+  }
+
+  .cta .boundary {
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  /* The footer stays on the morning sheet, so the page ends in one ground. */
+  .colophon {
+    background: var(--bg);
+    padding-block: 0.5rem 2rem;
+    text-align: center;
+    font-size: var(--fs-small);
     letter-spacing: 0.01em;
   }
 
-  @media (max-width: 30rem) {
-    .register-row {
-      flex-direction: column;
+  /* ---------- From tablet up ---------- */
+
+  @media (min-width: 52rem) {
+    /* The sentence straddles the shared boundary: Anton's half above his plot, Frederik's above his. */
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 clamp(1.5rem, 3vw, 2.5rem);
     }
-    .plot + .plot {
-      border-left: none;
-      border-top: 1px solid var(--line);
+
+    .pair span:first-child {
+      text-align: right;
     }
-    .plot-mail,
-    .plot-secondary {
-      padding-block: 0.6rem;
+
+    .plan {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: auto;
     }
-    .plot-mail:focus-visible,
-    .plot-secondary:focus-visible {
-      padding-block: 0;
-      margin-block: 0.6rem;
+
+    .plan-drawing--tall { display: none; }
+    .plan-drawing--wide { display: block; }
+
+    .plan > .stone:nth-of-type(1) { --x: 0%;    --y: 1.8%; }
+    .plan > .stone:nth-of-type(2) { --x: 100%;  --y: 0%; }
+    .plan > .stone:nth-of-type(3) { --x: 99.4%; --y: 100%; }
+    .plan > .stone:nth-of-type(4) { --x: 0.8%;  --y: 98.5%; }
+    .plan > .stone:nth-of-type(5) { --x: 49.2%; --y: 0.9%; }
+    .plan > .stone:nth-of-type(6) { --x: 50.8%; --y: 99.25%; }
+  }
+
+  /* ---------- The twelve-column sheet ---------- */
+
+  @media (min-width: 56rem) {
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap);
     }
-    .plot {
+
+    .opening-body .problem {
+      grid-column: 1 / span 5;
+    }
+
+    .opening-body .reply {
+      grid-column: 7 / -1;
+    }
+
+    .opening-body .answer {
+      margin-top: 0;
+    }
+
+    .werk-head h2 {
+      grid-column: 1 / span 7;
+    }
+
+    .werk-head .lede {
+      grid-column: 8 / -1;
+      align-self: end;
+      margin-top: 0;
       padding-bottom: 0.5rem;
     }
-    /* The date moves above the name instead of squeezing the text column. */
-    .work {
-      grid-template-columns: minmax(0, 1fr);
+
+    .works > .work {
+      grid-column: 1 / -1;
     }
-    .work-when {
-      padding-top: 0;
-      margin-bottom: 0.125rem;
+
+    /* Each ranked entry repeats the sheet's own columns, so its parts land on them. */
+    .work--flagship,
+    .works > .work--next {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap);
+    }
+
+    .work--flagship .when {
+      grid-column: 1 / span 4;
+    }
+
+    .work--flagship .work-main {
+      grid-column: 5 / -1;
+      padding-top: 0.75rem;
+    }
+
+    .work--flagship .quote {
+      grid-column: 1 / -1;
+    }
+
+    .works > .work--mid {
+      grid-column: 1 / span 7;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      column-gap: var(--gap);
+    }
+
+    .work--mid .when {
+      grid-column: 1 / span 3;
+    }
+
+    .work--mid .work-main {
+      grid-column: 4 / -1;
+      padding-top: 0.5rem;
+    }
+
+    .works > .work--background {
+      grid-column: 9 / -1;
+    }
+
+    .work--next .when {
+      grid-column: 1 / span 4;
+      margin-bottom: 0;
+    }
+
+    .work--next .work-main {
+      grid-column: 5 / -1;
+    }
+
+    /* The conviction starts on the halfway line, above the boundary the two plots share. */
+    .wie-head h2 {
+      grid-column: 1 / span 6;
+    }
+
+    .wie-head .why {
+      grid-column: 7 / -1;
+      margin-top: 0.35rem;
+    }
+
+    .cta h2 span {
+      display: block;
     }
   }
 
-  @media (max-width: 22rem) {
-    /* Keeps the name clear of the parcel's side boundaries. */
-    h1 {
-      font-size: 2.25rem;
+  @media (min-width: 60rem) {
+    .aanpak {
+      --plot-m: calc(var(--pad) * 0.4);
+    }
+
+    .aanpak-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: start;
+    }
+
+    /* The figures step clear of the boundary that runs through the posts. */
+    .step {
+      padding-left: clamp(1rem, 1.8vw, 1.75rem);
+    }
+
+    /* One boundary runs through all four posts and off the plot at both ends. */
+    .steps::before {
+      content: "";
+      position: absolute;
+      top: -12rem;
+      bottom: -12rem;
+      left: 0;
+      width: 1px;
+      background: var(--rule-c);
+      rotate: 0.12deg;
+    }
+  }
+
+  /* Only where the whole heading fits the screen with room to spare. */
+  @media (min-width: 60rem) and (min-height: 44rem) {
+    .aanpak-head {
+      position: sticky;
+      top: 3rem;
+    }
+  }
+
+  /* Wide enough for the hook and the quote to hold their lines. */
+  @media (min-width: 80rem) {
+    .hook span,
+    .quote p span {
+      display: block;
+    }
+
+    .quote {
+      padding-inline: calc((100% - 11 * var(--gap)) / 12 + var(--gap)) 0;
     }
   }
 
   @media print {
-    body {
-      display: block;
+    .beat,
+    .aanpak-ground,
+    .colophon,
+    .quote,
+    .quote::before {
+      background: #fff;
+      color: #000;
+    }
+
+    .ground-ink,
+    .ground-dawn {
+      --accent: #000;
+    }
+
+    .boundary,
+    .stone,
+    .plan .parcels,
+    .nameplate::before,
+    .nameplate::after,
+    .invite::before,
+    .invite::after,
+    .step::before,
+    .step::after,
+    .steps::before {
+      display: none;
+    }
+
+    .opening {
       min-height: 0;
+    }
+
+    .aanpak-head {
+      position: static;
+    }
+
+    .btn,
+    .btn:hover {
+      background: none;
+      border-color: #000;
+      color: #000;
     }
   }
 
@@ -537,188 +1203,229 @@ const schema = {
     html {
       scroll-behavior: smooth;
     }
-    .cta {
-      transition: background-color 0.15s ease-out, transform 0.1s ease-out;
+
+    .btn {
+      transition: color 0.15s ease-out, background-color 0.15s ease-out, border-color 0.15s ease-out, transform 0.1s ease-out;
     }
-    /* The whole sheet arrives together, without a stagger. */
-    .wrap {
-      animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* The one authored moment: the boundary under the name is set out, post to post.
+       The sheet, the name and the hairline are there from the first frame. */
+    .hero .boundary::after {
+      animation: survey 1.3s var(--ease-out) 0.3s both;
     }
   }
 
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes survey {
+    from { scale: 0 1; }
+    to { scale: 1 1; }
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <main>
-    <div class="hero">
-      <div class="masthead">
-        <svg class="parcels" viewBox="0 0 800 224" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M-10,34 L66.1,31.3" />
-          <path d="M66.1,31.3 L735.4,7.6" class="accent" />
-          <path d="M735.4,7.6 L810,5" />
-          <path d="M70,-6 L46,224" />
-          <path d="M734,-6 L758,224" />
-          <path d="M-10,118 L56.2,126" />
-          <path d="M745.5,104 L810,97" />
-        </svg>
-        <p class="eyebrow">Sociale softwarestudio</p>
-        <h1>Gemeen Goed</h1>
-        <p class="tagline"><span>Software voor sociale organisaties.</span> <span>Samen gebouwd, samen gedragen.</span></p>
-      </div>
-      <div class="intro">
-        <p class="lead">Grote softwarebedrijven liggen niet wakker van jouw sector. Wij wel.</p>
-        <p>Vandaag betaalt elke organisatie apart voor hetzelfde wiel. De groten laten dure software op maat maken. De rest behelpt zich met pakketten die voor iemand anders gemaakt zijn, of haalt acrobatentoeren uit met Excel.</p>
-        <p class="answer">We bouwen software samen met een sector, voor organisaties die er qua software vaak buiten vallen maar wel goeie software verdienen.</p>
-        <p class="jump"><a href="#contact">Praat met ons</a></p>
-      </div>
-    </div>
+  <main>
 
-    <section class="section" aria-labelledby="aanpak">
-      <div class="section-head">
-        <h2 id="aanpak">Geen software van de plank. Ook geen risicovol maatwerk.</h2>
-        <p>We bouwen software die past bij hoe jouw sector werkt, en die gedragen wordt door meerdere organisaties. Zo krijg je de kwaliteit van maatwerk aan een gedeelde prijs.</p>
+    <header class="beat hero ground-paper">
+      <div class="canvas">
+        <p class="eyebrow">Sociale softwarestudio</p>
+        <div class="nameplate">
+          <h1>Gemeen Goed</h1>
+          <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
+          <p class="tagline"><span>Software voor sociale organisaties.</span> <span>Samen gebouwd, samen gedragen.</span></p>
+        </div>
       </div>
-      <ol class="register steps">
-        <li class="step">
-          <span class="step-n" aria-hidden="true">1</span>
-          <div>
-            <h3>We brengen de sector aan tafel</h3>
-            <p>We beginnen pas als meerdere organisaties met hetzelfde probleem mee aan tafel zitten. Eerst lopen we mee op de werkvloer, tot we snappen waar het gereedschap tegenwerkt.</p>
+    </header>
+
+    <section class="beat opening ground-ink" aria-labelledby="haak">
+      <div class="canvas">
+        <h2 class="hook" id="haak"><span>Grote softwarebedrijven</span> <span>liggen niet wakker</span> <span>van jouw sector.</span> <span class="punch">Wij wel.</span></h2>
+        <div class="opening-body">
+          <div class="boundary boundary--plain boundary--falling" aria-hidden="true"></div>
+          <div class="grid">
+            <p class="problem">Vandaag betaalt elke organisatie apart voor hetzelfde wiel. De groten laten dure software op maat maken. De rest behelpt zich met pakketten die voor iemand anders gemaakt zijn, of haalt acrobatentoeren uit met Excel.</p>
+            <div class="reply">
+              <p class="answer">We bouwen software samen met een sector, voor organisaties die er qua software vaak buiten vallen maar wel goeie software verdienen.</p>
+              <p class="jump">
+                <a class="btn" href="#contact">Praat met ons
+                  <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg>
+                </a>
+              </p>
+            </div>
           </div>
-        </li>
-        <li class="step">
-          <span class="step-n" aria-hidden="true">2</span>
-          <div>
-            <h3>We bouwen met de eersten</h3>
-            <p>Met een paar organisaties maken we een eerste werkende versie. In weken, niet in jaren. Echte gebruikers vanaf dag één.</p>
-          </div>
-        </li>
-        <li class="step">
-          <span class="step-n" aria-hidden="true">3</span>
-          <div>
-            <h3>De sector draagt het</h3>
-            <p>Wat werkt, wordt een dienst voor de hele sector. Een gebruikersraad stuurt mee en iedereen betaalt naar draagkracht.</p>
-          </div>
-        </li>
-        <li class="step">
-          <span class="step-n" aria-hidden="true">4</span>
-          <div>
-            <h3>Wij blijven, en je praat met de makers</h3>
-            <p>We blijven onderhouden wat we maakten. Heb je een vraag, dan praat je met de mensen die het platform bouwden, en je krijgt snel antwoord. Geen ticket dat weken blijft liggen, geen nieuwe offerte voor elke aanpassing.</p>
-          </div>
-        </li>
-      </ol>
+        </div>
+      </div>
     </section>
 
-    <section class="section" aria-labelledby="werk">
-      <div class="section-head">
-        <h2 id="werk">Wij bouwden dit al</h2>
-        <p>Producten die we van nul opbouwden. Ze draaien vandaag nog altijd.</p>
+    <section class="beat aanpak ground-paper" aria-labelledby="aanpak">
+      <div class="aanpak-ground ground-sage">
+        <div class="canvas aanpak-grid">
+          <div class="aanpak-head">
+            <h2 id="aanpak"><span>Geen software van de plank.</span> <span class="turn">Ook geen risicovol maatwerk.</span></h2>
+            <p class="lede">We bouwen software die past bij hoe jouw sector werkt, en die gedragen wordt door meerdere organisaties. Zo krijg je de kwaliteit van maatwerk aan een gedeelde prijs.</p>
+          </div>
+          <ol class="steps">
+            <li class="step">
+              <span class="step-n" aria-hidden="true">1</span>
+              <div>
+                <h3>We brengen de sector aan tafel</h3>
+                <p>We beginnen pas als meerdere organisaties met hetzelfde probleem mee aan tafel zitten. Eerst lopen we mee op de werkvloer, tot we snappen waar het gereedschap tegenwerkt.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step-n" aria-hidden="true">2</span>
+              <div>
+                <h3>We bouwen met de eersten</h3>
+                <p>Met een paar organisaties maken we een eerste werkende versie. In weken, niet in jaren. Echte gebruikers vanaf dag één.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step-n" aria-hidden="true">3</span>
+              <div>
+                <h3>De sector draagt het</h3>
+                <p>Wat werkt, wordt een dienst voor de hele sector. Een gebruikersraad stuurt mee en iedereen betaalt naar draagkracht.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step-n" aria-hidden="true">4</span>
+              <div>
+                <h3>Wij blijven, en je praat met de makers</h3>
+                <p>We blijven onderhouden wat we maakten. Heb je een vraag, dan praat je met de mensen die het platform bouwden, en je krijgt snel antwoord. Geen ticket dat weken blijft liggen, geen nieuwe offerte voor elke aanpassing.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
       </div>
-      <ul class="register works">
-        <li class="work">
-          <span class="work-when">Sinds 2019</span>
-          <div>
-            <h3><a href="https://opvang.vlaanderen" rel="noopener">Opvang.Vlaanderen</a></h3>
-            <p>Alleen de grote steden konden zich een eigen systeem voor kinderopvang veroorloven. Kleine besturen deden het met formuliertjes en Excel. Anton bracht ze samen rond één platform, in een model waar de breedste schouders de grootste last dragen.</p>
-            <blockquote>
-              <p>Opvang Vlaanderen is van ons, niet van jullie.</p>
+    </section>
+
+    <section class="beat werk ground-alt" aria-labelledby="werk">
+      <div class="canvas">
+        <div class="grid werk-head">
+          <h2 id="werk">Wij bouwden dit al</h2>
+          <p class="lede">Producten die we van nul opbouwden. Ze draaien vandaag nog altijd.</p>
+        </div>
+        <div class="boundary" aria-hidden="true"></div>
+        <ul class="grid works">
+          <li class="work work--flagship">
+            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2019</span></p>
+            <div class="work-main">
+              <h3><a href="https://opvang.vlaanderen" rel="noopener">Opvang.Vlaanderen</a></h3>
+              <p class="work-text">Alleen de grote steden konden zich een eigen systeem voor kinderopvang veroorloven. Kleine besturen deden het met formuliertjes en Excel. Anton bracht ze samen rond één platform, in een model waar de breedste schouders de grootste last dragen.</p>
+              <p class="fact"><span class="fig">200</span> <span class="fact-text">lokale besturen. Een gebruikersraad beslist mee.</span></p>
+            </div>
+            <blockquote class="quote">
+              <p><span class="q-open">Opvang Vlaanderen is van ons,</span> <span class="q-close">niet van jullie.</span></p>
               <footer>Uit de gebruikersraad</footer>
             </blockquote>
-            <p class="work-fact">200 lokale besturen. Een gebruikersraad beslist mee.</p>
-          </div>
-        </li>
-        <li class="work">
-          <span class="work-when">Sinds 2020</span>
-          <div>
-            <h3><a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a></h3>
-            <p>Gelanceerd in de eerste dagen van covid voor de woonzorgsector. Uitgegroeid tot een inspiratiebron voor animatoren, met een boek erbij.</p>
-            <p class="work-fact">2.200 actieve gebruikers per maand.</p>
-          </div>
-        </li>
-        <li class="work">
-          <span class="work-when">Sinds 2009</span>
-          <div>
-            <h3><a href="https://www.prezly.com" rel="noopener">Prezly</a></h3>
-            <p>Communicatiesoftware die Frederik mee oprichtte. Geen sociale sector, wel de plek waar hij leerde een product uit te bouwen dat honderden organisaties elke dag gebruiken.</p>
-            <p class="work-fact">Draait vandaag nog.</p>
-          </div>
-        </li>
-        <li class="work">
-          <span class="work-when now">Nu in opbouw</span>
-          <div>
-            <h3>Voor vrijwilligers&shy;coördinatoren</h3>
-            <p>Vrijwilligerscoördinatoren verliezen elke maand dagen aan rondklikken in planningssoftware die voor uitzendkantoren gemaakt is. Die tijd hoort naar hun vrijwilligers te gaan. We bouwen een tool waarmee ze hun planning veel sneller rond krijgen.</p>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <section class="section" aria-labelledby="wie">
-      <div class="section-head">
-        <h2 id="wie">Wie bouwt hier?</h2>
-        <p class="pair">Anton brengt organisaties bijeen, Frederik bouwt de software.</p>
-        <p>We doen dit omdat het niet normaal is dat wie het belangrijkste werk doet, de slechtste tools krijgt. Wie de wereld beter maakt, hoort dat niet alleen te doen.</p>
-      </div>
-      <div class="register" role="group" aria-label="De makers en hun contactgegevens">
-        <div class="register-row">
-        <div class="plot">
-          <div class="plot-head">
-            <img class="plot-photo" src="/images/anton.webp" alt="" width="56" height="56" loading="lazy" decoding="async">
-            <div>
-              <h3 class="plot-name">Anton Aerts</h3>
-              <p class="plot-role">Partnerschappen &amp; support</p>
+          </li>
+          <li class="work work--mid">
+            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2020</span></p>
+            <div class="work-main">
+              <h3><a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a></h3>
+              <p class="work-text">Gelanceerd in de eerste dagen van covid voor de woonzorgsector. Uitgegroeid tot een inspiratiebron voor animatoren, met een boek erbij.</p>
+              <p class="fact"><span class="fig">2.200</span> <span class="fact-text">actieve gebruikers per maand.</span></p>
             </div>
-          </div>
-          <p class="plot-bio">Houdt niet zo van computers, wel van mensen bijeenbrengen. Verenigde 200 lokale besturen rond Opvang.Vlaanderen. Kent de publieke en sociale sector van binnenuit. Is er trots op dat wie een vraag heeft, snel antwoord krijgt.</p>
-          <ul class="plot-links">
-            <li class="plot-links-mail"><a class="plot-mail" href="mailto:anton@gemeengoed.studio">anton@gemeengoed.studio</a></li>
-            <li><a class="plot-secondary" href="https://www.linkedin.com/in/antonaerts/" rel="noopener">LinkedIn<span class="visually-hidden"> van Anton Aerts</span></a></li>
-          </ul>
-        </div>
-        <div class="plot">
-          <div class="plot-head">
-            <img class="plot-photo" src="/images/frederik.webp" alt="" width="56" height="56" loading="lazy" decoding="async">
-            <div>
-              <h3 class="plot-name">Frederik Vincx</h3>
-              <p class="plot-role">Productontwerp &amp; ontwikkeling</p>
+          </li>
+          <li class="work work--background">
+            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2009</span></p>
+            <div class="work-main">
+              <h3><a href="https://www.prezly.com" rel="noopener">Prezly</a></h3>
+              <p class="work-text">Communicatiesoftware die Frederik mee oprichtte. Geen sociale sector, wel de plek waar hij leerde een product uit te bouwen dat honderden organisaties elke dag gebruiken.</p>
+              <p class="fact">Draait vandaag nog.</p>
             </div>
-          </div>
-          <p class="plot-bio">Ontwerpt en programmeert. Medeoprichter van Prezly, bouwer van Hartverwarmers. Sinds 2016 alleen nog voor sociale organisaties. Kan er slecht tegen dat iemand vol goeie bedoelingen wordt tegengehouden door slechte tools.</p>
-          <ul class="plot-links">
-            <li class="plot-links-mail"><a class="plot-mail" href="mailto:frederik@gemeengoed.studio">frederik@gemeengoed.studio</a></li>
-            <li><a class="plot-secondary" href="https://www.linkedin.com/in/frederikvincx/" rel="noopener">LinkedIn<span class="visually-hidden"> van Frederik Vincx</span></a></li>
-            <li><a class="plot-secondary" href="https://frederikvincx.com/" rel="noopener">Website<span class="visually-hidden"> van Frederik Vincx</span></a></li>
-          </ul>
-        </div>
-        </div>
+          </li>
+          <li class="work work--next">
+            <svg class="parcels" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0,2.5 L100,0 L99.5,100 L0.4,97.5 Z" /></svg>
+            <p class="when">Nu in opbouw</p>
+            <div class="work-main">
+              <h3>Voor vrijwilligers&shy;coördinatoren</h3>
+              <p class="work-text">Vrijwilligerscoördinatoren verliezen elke maand dagen aan rondklikken in planningssoftware die voor uitzendkantoren gemaakt is. Die tijd hoort naar hun vrijwilligers te gaan. We bouwen een tool waarmee ze hun planning veel sneller rond krijgen.</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
 
-    <section class="invite" id="contact" aria-labelledby="broeden">
-      <svg class="parcels" viewBox="0 0 800 224" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M-10,34 L66.1,31.3" />
-        <path d="M66.1,31.3 L735.4,7.6" class="accent" />
-        <path d="M735.4,7.6 L810,5" />
-        <path d="M70,-6 L46,224" />
-        <path d="M734,-6 L758,224" />
-        <path d="M-10,118 L56.2,126" />
-        <path d="M745.5,104 L810,97" />
-      </svg>
-      <h2 id="broeden">Iets aan het broeden in jouw sector?</h2>
-      <p>Werk je bij een sociale organisatie en bots je op software die nét niet past? Daar worden wij wakker van. We luisteren graag mee.</p>
-      <a class="cta" href="mailto:anton@gemeengoed.studio">Mail Anton</a>
-      <p class="cta-address">anton@gemeengoed.studio</p>
+    <section class="beat wie ground-paper" aria-labelledby="wie">
+      <div class="canvas">
+        <div class="grid wie-head">
+          <h2 id="wie">Wie bouwt hier?</h2>
+          <p class="why">We doen dit omdat het niet normaal is dat wie het belangrijkste werk doet, de slechtste tools krijgt. <span class="also">Wie de wereld beter maakt, hoort dat niet alleen te doen.</span></p>
+        </div>
+        <p class="pair"><span>Anton brengt organisaties bijeen,</span> <span>Frederik bouwt de software.</span></p>
+        <div class="plan" role="group" aria-label="De makers en hun contactgegevens">
+          <svg class="parcels plan-drawing--wide" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <polygon class="plot-a" points="0,18 492,9 508,992.5 8,985" />
+            <polygon class="plot-b" points="492,9 1000,0 994,1000 508,992.5" />
+            <path d="M-21,18.38 L1021,-0.38" />
+            <path d="M-13,984.68 L1015,1000.32" />
+            <path d="M-0.38,-28 L8.38,1031" />
+            <path d="M1000.28,-46 L993.72,1046" />
+            <path class="shared" d="M492,9 L508,992.5" />
+          </svg>
+          <svg class="parcels plan-drawing--tall" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <polygon class="plot-a" points="0,6 1000,0 995,505 6,497" />
+            <polygon class="plot-b" points="6,497 995,505 990,1000 12,994" />
+            <path d="M-50,6.3 L1050,-0.3" />
+            <path d="M-38,993.69 L1040,1000.31" />
+            <path d="M-0.19,-10 L12.19,1010" />
+            <path d="M1000.16,-16 L989.84,1016" />
+            <path class="shared" d="M6,497 L995,505" />
+          </svg>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <div class="plot ground-sheet">
+            <div class="plot-head">
+              <img class="plot-photo" src="/images/anton-400.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
+              <div>
+                <h3 class="plot-name">Anton Aerts</h3>
+                <p class="plot-role">Partnerschappen &amp; support</p>
+              </div>
+            </div>
+            <p class="plot-bio">Houdt niet zo van computers, wel van mensen bijeenbrengen. Verenigde 200 lokale besturen rond Opvang.Vlaanderen. Kent de publieke en sociale sector van binnenuit. Is er trots op dat wie een vraag heeft, snel antwoord krijgt.</p>
+            <ul class="plot-links">
+              <li class="plot-links-mail"><a class="plot-mail" href="mailto:anton@gemeengoed.studio">anton@gemeengoed.studio</a></li>
+              <li><a class="plot-secondary" href="https://www.linkedin.com/in/antonaerts/" rel="noopener">LinkedIn<span class="visually-hidden"> van Anton Aerts</span></a></li>
+            </ul>
+          </div>
+          <div class="plot ground-sage">
+            <div class="plot-head">
+              <img class="plot-photo" src="/images/frederik-400.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
+              <div>
+                <h3 class="plot-name">Frederik Vincx</h3>
+                <p class="plot-role">Productontwerp &amp; ontwikkeling</p>
+              </div>
+            </div>
+            <p class="plot-bio">Ontwerpt en programmeert. Medeoprichter van Prezly, bouwer van Hartverwarmers. Sinds 2016 alleen nog voor sociale organisaties. Kan er slecht tegen dat iemand vol goeie bedoelingen wordt tegengehouden door slechte tools.</p>
+            <ul class="plot-links">
+              <li class="plot-links-mail"><a class="plot-mail" href="mailto:frederik@gemeengoed.studio">frederik@gemeengoed.studio</a></li>
+              <li><a class="plot-secondary" href="https://www.linkedin.com/in/frederikvincx/" rel="noopener">LinkedIn<span class="visually-hidden"> van Frederik Vincx</span></a></li>
+              <li><a class="plot-secondary" href="https://frederikvincx.com/" rel="noopener">Website<span class="visually-hidden"> van Frederik Vincx</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
 
-    </main>
+    <section class="beat cta ground-dawn" id="contact" aria-labelledby="broeden">
+      <div class="canvas">
+        <div class="invite">
+          <h2 id="broeden"><span>Iets aan het broeden</span> <span>in jouw sector?</span></h2>
+          <p class="cta-say">Werk je bij een sociale organisatie en bots je op software die nét niet past? Daar worden wij wakker van. We luisteren graag mee.</p>
+          <a class="btn btn--face" href="mailto:anton@gemeengoed.studio">
+            <img class="btn-face" src="/images/anton-400.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
+            <span>Mail Anton</span>
+          </a>
+          <p class="cta-address">anton@gemeengoed.studio</p>
+          <div class="boundary boundary--falling" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
+        </div>
+      </div>
+    </section>
 
-    <footer>&copy; 2026 Gemeen Goed</footer>
-  </div>
+  </main>
+
+  <footer class="colophon ground-dawn">&copy; 2026 Gemeen Goed</footer>
 </body>
 </html>

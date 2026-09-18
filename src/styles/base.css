@@ -58,6 +58,24 @@
   --ochre: #A9793C;
   --line: #C7BFA4;
   --accent-opacity: 0.7;
+
+  /* The coloured sheets. The page runs from a night sheet to a morning sheet.
+     Text on a deep ground never uses --paper, because --paper turns dark in the dark theme. */
+  --night: #20261B;
+  --night-edge: transparent;
+  --band: #5E6E37;
+  --on-deep: #F1ECDD;
+  --on-deep-soft: #C4BFA8;
+  --sage: #DCE2C8;
+  --sheet: #F9F6EC;
+  /* The morning sheet stays a light ochre sheet in both themes, so its ink stays dark too. */
+  --dawn: #C79A5C;
+  --on-dawn: #20261B;
+  /* Ochre for figures on paper-alt and sage, where plain ochre drops under 3:1. */
+  --ochre-deep: #8F6228;
+  /* Surveyor lines, a step darker than --line so they survive an office monitor. */
+  --rule: #9F9778;
+
   --font-display: 'Lora', 'Lora Fallback', Georgia, 'Times New Roman', serif;
   --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
@@ -72,6 +90,15 @@
     --ochre: #C79A5C;
     --line: #4A4A38;
     --accent-opacity: 0.8;
+    --night: #080A05;
+    --night-edge: #34382A;
+    --band: #34421F;
+    --on-deep: #ECE6D2;
+    --on-deep-soft: #B9B49E;
+    --sage: #1F2916;
+    --sheet: #2A2A1D;
+    --ochre-deep: #C79A5C;
+    --rule: #63624B;
   }
 }
 
@@ -84,6 +111,81 @@
   --ochre: #C79A5C;
   --line: #4A4A38;
   --accent-opacity: 0.8;
+  --night: #080A05;
+  --night-edge: #34382A;
+  --band: #34421F;
+  --on-deep: #ECE6D2;
+  --on-deep-soft: #B9B49E;
+  --sage: #1F2916;
+  --sheet: #2A2A1D;
+  --ochre-deep: #C79A5C;
+  --rule: #63624B;
+}
+
+/* Every ground sets the same roles, so a component never names a colour
+   and the dark theme only has to remap the tokens above. */
+.ground-paper {
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --accent: var(--ochre);
+  --rule-c: var(--rule);
+  --focus: var(--moss);
+  --link-hover: var(--moss);
+}
+
+.ground-alt {
+  --bg: var(--paper-alt);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --accent: var(--ochre-deep);
+  --rule-c: var(--rule);
+  --focus: var(--ink);
+  --link-hover: var(--ink);
+}
+
+.ground-sheet {
+  --bg: var(--sheet);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --accent: var(--ochre);
+  --rule-c: var(--rule);
+  --focus: var(--ink);
+  --link-hover: var(--moss);
+}
+
+.ground-sage {
+  --bg: var(--sage);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --accent: var(--ochre-deep);
+  --rule-c: color-mix(in srgb, var(--ink) 42%, var(--sage));
+  --focus: var(--ink);
+  --link-hover: var(--ink);
+}
+
+.ground-ink {
+  --bg: var(--night);
+  --fg: var(--on-deep);
+  --fg-soft: var(--on-deep-soft);
+  --accent: var(--dawn);
+  --rule-c: color-mix(in srgb, var(--on-deep) 30%, var(--night));
+  --focus: var(--dawn);
+  --link-hover: var(--dawn);
+}
+
+.ground-dawn {
+  --bg: var(--dawn);
+  --fg: var(--on-dawn);
+  --fg-soft: var(--on-dawn);
+  --accent: var(--on-dawn);
+  --rule-c: color-mix(in srgb, var(--on-dawn) 55%, var(--dawn));
+  --focus: var(--on-dawn);
+  --link-hover: var(--on-dawn);
+}
+
+[class*="ground-"] {
+  color: var(--fg);
 }
 
 * { box-sizing: border-box; }
@@ -107,18 +209,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* One link style for the whole site: ink text, ochre underline, moss on hover. */
+/* One link style for the whole site: ink text, ochre underline, moss on hover.
+   On a coloured ground the same link takes that ground's roles. */
 a {
-  color: var(--ink);
+  color: var(--fg, var(--ink));
   text-decoration: underline;
-  text-decoration-color: var(--ochre);
+  text-decoration-color: var(--accent, var(--ochre));
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 }
 
 a:hover {
-  color: var(--moss);
-  text-decoration-color: var(--moss);
+  color: var(--link-hover, var(--moss));
+  text-decoration-color: var(--link-hover, var(--moss));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -127,8 +230,9 @@ a:hover {
   }
 }
 
+/* The ring takes the ground's own focus colour: moss disappears on moss and on ochre. */
 a:focus-visible {
-  outline: 2px solid var(--moss);
+  outline: 2px solid var(--focus, var(--moss));
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -168,6 +272,17 @@ a:focus-visible {
     --moss: #333;
     --ochre: #666;
     --line: #999;
+    --night: #fff;
+    --night-edge: transparent;
+    --band: #fff;
+    --on-deep: #000;
+    --on-deep-soft: #333;
+    --sage: #fff;
+    --sheet: #fff;
+    --dawn: #fff;
+    --on-dawn: #000;
+    --ochre-deep: #666;
+    --rule: #999;
   }
 
   .parcels { display: none; }
