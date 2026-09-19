@@ -673,19 +673,23 @@ const schema = {
     content: close-quote;
   }
 
+  /* Two sentences: where they wrap, each takes its own line. */
   .quote footer {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.875rem;
     margin-top: clamp(1.25rem, 3vw, 2rem);
     font-size: var(--fs-body);
+    text-wrap: balance;
   }
 
+  /* The rule sits on the middle of the first line, however many lines follow. */
   .quote footer::before {
     content: "";
     flex: none;
     width: 2.5rem;
     height: 1px;
+    margin-top: 0.8em;
     background: currentColor;
   }
 
@@ -1243,7 +1247,7 @@ const schema = {
           <div class="grid">
             <p class="problem">Vandaag betaalt elke organisatie apart voor hetzelfde wiel. De groten laten dure software op maat maken. De rest behelpt zich met pakketten die voor iemand anders gemaakt zijn, of haalt acrobatentoeren uit met Excel.</p>
             <div class="reply">
-              <p class="answer">We bouwen software samen met een sector, voor organisaties die er qua software vaak buiten vallen maar wel goeie software verdienen.</p>
+              <p class="answer">Goeie software hoort gemeengoed te zijn. Dus bouwen we ze samen met een hele sector, voor organisaties die anders uit de boot vallen.</p>
               <p class="jump">
                 <a class="btn" href="#contact">Praat met ons
                   <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg>
@@ -1281,7 +1285,7 @@ const schema = {
               <span class="step-n" aria-hidden="true">3</span>
               <div>
                 <h3>De sector draagt het</h3>
-                <p>Wat werkt, wordt een dienst voor de hele sector. Een gebruikersraad stuurt mee en iedereen betaalt naar draagkracht.</p>
+                <p>Wat werkt, wordt gemeengoed: een dienst voor de hele sector. Een gebruikersraad stuurt mee en iedereen betaalt naar draagkracht.</p>
               </div>
             </li>
             <li class="step">
@@ -1313,7 +1317,7 @@ const schema = {
             </div>
             <blockquote class="quote">
               <p><span class="q-open">Opvang Vlaanderen is van ons,</span> <span class="q-close">niet van jullie.</span></p>
-              <footer>Uit de gebruikersraad</footer>
+              <footer>Uit de gebruikersraad. Zo klinkt gemeengoed.</footer>
             </blockquote>
           </li>
           <li class="work work--mid">
@@ -1413,7 +1417,7 @@ const schema = {
       <div class="canvas">
         <div class="invite">
           <h2 id="broeden"><span>Iets aan het broeden</span> <span>in jouw sector?</span></h2>
-          <p class="cta-say">Werk je bij een sociale organisatie en bots je op software die nét niet past? Daar worden wij wakker van. We luisteren graag mee.</p>
+          <p class="cta-say">Werk je bij een sociale organisatie en bots je op software die nét niet past? Grote kans dat je niet de enige bent. Daar liggen wij wakker van. We luisteren graag mee.</p>
           <a class="btn btn--face" href="mailto:anton@gemeengoed.studio">
             <img class="btn-face" src="/images/anton-400.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
             <span>Mail Anton</span>
@@ -1426,6 +1430,6 @@ const schema = {
 
   </main>
 
-  <footer class="colophon ground-dawn">&copy; 2026 Gemeen Goed</footer>
+  <footer class="colophon ground-dawn">&copy; 2026 De lieve jongens van Gemeen Goed</footer>
 </body>
 </html>
