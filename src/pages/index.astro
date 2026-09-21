@@ -243,13 +243,14 @@ const schema = {
     height: 1rem;
   }
 
-  .ground-ink .btn {
+  .ground-grove .btn,
+  .ground-forest .btn {
     --btn-bg: transparent;
-    --btn-fg: var(--on-deep);
-    --btn-line: var(--on-deep);
-    --btn-bg-hover: var(--dawn);
+    --btn-fg: var(--on-green);
+    --btn-line: var(--on-green);
+    --btn-bg-hover: var(--green-accent);
     --btn-fg-hover: var(--on-dawn);
-    --btn-line-hover: var(--dawn);
+    --btn-line-hover: var(--green-accent);
   }
 
   .ground-dawn .btn {
@@ -336,7 +337,7 @@ const schema = {
     font-weight: 500;
     font-size: clamp(1.25rem, min(2.7vw, 3.6vh), 2.25rem);
     line-height: 1.2;
-    color: var(--moss);
+    color: var(--moss-deep);
     text-wrap: balance;
   }
 
@@ -352,7 +353,7 @@ const schema = {
     display: flex;
     flex-direction: column;
     padding-block: clamp(2rem, 5vh, 4.25rem) clamp(3.5rem, 9vh, 6rem);
-    border-block: 1px solid var(--night-edge);
+    border-block: 1px solid var(--grove-edge);
   }
 
   .opening > .canvas {
@@ -1169,8 +1170,8 @@ const schema = {
       color: #000;
     }
 
-    .ground-ink,
-    .ground-dawn {
+    .ground-grove,
+    .ground-forest {
       --accent: #000;
     }
 
@@ -1228,7 +1229,7 @@ const schema = {
 <body>
   <main>
 
-    <header class="beat hero ground-paper">
+    <header class="beat hero ground-sage">
       <div class="canvas">
         <p class="eyebrow">Sociale softwarestudio</p>
         <div class="nameplate">
@@ -1239,7 +1240,7 @@ const schema = {
       </div>
     </header>
 
-    <section class="beat opening ground-ink" aria-labelledby="haak">
+    <section class="beat opening ground-grove" aria-labelledby="haak">
       <div class="canvas">
         <h2 class="hook" id="haak"><span>Grote softwarebedrijven</span> <span>liggen niet wakker</span> <span>van jouw sector.</span> <span class="punch">Wij wel.</span></h2>
         <div class="opening-body">
@@ -1415,7 +1416,7 @@ const schema = {
       </div>
     </section>
 
-    <section class="beat cta ground-dawn" id="contact" aria-labelledby="broeden">
+    <section class="beat cta ground-forest" id="contact" aria-labelledby="broeden">
       <div class="canvas">
         <div class="invite">
           <h2 id="broeden"><span>Iets aan het broeden</span> <span>in jouw sector?</span></h2>
@@ -1432,6 +1433,6 @@ const schema = {
 
   </main>
 
-  <footer class="colophon ground-dawn">&copy; 2026 De lieve jongens van Gemeen Goed</footer>
+  <footer class="colophon ground-forest">&copy; 2026 De lieve jongens van Gemeen Goed</footer>
 </body>
 </html>

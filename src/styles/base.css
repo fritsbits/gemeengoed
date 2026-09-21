@@ -55,6 +55,7 @@
   --ink: #20261B;
   --ink-soft: #4B5240;
   --moss: #5E6E37;
+  --moss-deep: #4E602F;
   --ochre: #A9793C;
   --line: #C7BFA4;
   --accent-opacity: 0.7;
@@ -66,6 +67,12 @@
   --band: #5E6E37;
   --on-deep: #F1ECDD;
   --on-deep-soft: #C4BFA8;
+  --grove: #526547;
+  --grove-edge: transparent;
+  --forest: #425536;
+  --on-green: #F1ECDD;
+  --on-green-soft: #E8E1CD;
+  --green-accent: #E0B77B;
   --sage: #DCE2C8;
   --sheet: #F9F6EC;
   /* The morning sheet stays a light ochre sheet in both themes, so its ink stays dark too. */
@@ -87,6 +94,7 @@
     --ink: #ECE6D2;
     --ink-soft: #B9B49E;
     --moss: #9CB36B;
+    --moss-deep: #B6C983;
     --ochre: #C79A5C;
     --line: #4A4A38;
     --accent-opacity: 0.8;
@@ -95,6 +103,12 @@
     --band: #34421F;
     --on-deep: #ECE6D2;
     --on-deep-soft: #B9B49E;
+    --grove: #3E5030;
+    --grove-edge: #657153;
+    --forest: #2F3F25;
+    --on-green: #ECE6D2;
+    --on-green-soft: #D8D2BE;
+    --green-accent: #D4AA6B;
     --sage: #1F2916;
     --sheet: #2A2A1D;
     --ochre-deep: #C79A5C;
@@ -108,6 +122,7 @@
   --ink: #ECE6D2;
   --ink-soft: #B9B49E;
   --moss: #9CB36B;
+  --moss-deep: #B6C983;
   --ochre: #C79A5C;
   --line: #4A4A38;
   --accent-opacity: 0.8;
@@ -116,6 +131,12 @@
   --band: #34421F;
   --on-deep: #ECE6D2;
   --on-deep-soft: #B9B49E;
+  --grove: #3E5030;
+  --grove-edge: #657153;
+  --forest: #2F3F25;
+  --on-green: #ECE6D2;
+  --on-green-soft: #D8D2BE;
+  --green-accent: #D4AA6B;
   --sage: #1F2916;
   --sheet: #2A2A1D;
   --ochre-deep: #C79A5C;
@@ -172,6 +193,26 @@
   --rule-c: color-mix(in srgb, var(--on-deep) 30%, var(--night));
   --focus: var(--dawn);
   --link-hover: var(--dawn);
+}
+
+.ground-grove {
+  --bg: var(--grove);
+  --fg: var(--on-green);
+  --fg-soft: var(--on-green-soft);
+  --accent: var(--green-accent);
+  --rule-c: color-mix(in srgb, var(--on-green) 30%, var(--grove));
+  --focus: var(--green-accent);
+  --link-hover: var(--green-accent);
+}
+
+.ground-forest {
+  --bg: var(--forest);
+  --fg: var(--on-green);
+  --fg-soft: var(--on-green-soft);
+  --accent: var(--green-accent);
+  --rule-c: color-mix(in srgb, var(--on-green) 30%, var(--forest));
+  --focus: var(--green-accent);
+  --link-hover: var(--green-accent);
 }
 
 .ground-dawn {
@@ -270,6 +311,7 @@ a:focus-visible {
     --ink: #000;
     --ink-soft: #333;
     --moss: #333;
+    --moss-deep: #333;
     --ochre: #666;
     --line: #999;
     --night: #fff;
@@ -277,6 +319,12 @@ a:focus-visible {
     --band: #fff;
     --on-deep: #000;
     --on-deep-soft: #333;
+    --grove: #fff;
+    --grove-edge: transparent;
+    --forest: #fff;
+    --on-green: #000;
+    --on-green-soft: #333;
+    --green-accent: #000;
     --sage: #fff;
     --sheet: #fff;
     --dawn: #fff;
