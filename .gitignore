@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # lavish review artifacts
 .lavish/
+
+# local visual design explorations
+.superpowers/
