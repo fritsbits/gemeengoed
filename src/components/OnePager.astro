@@ -759,14 +759,21 @@ const schema = {
     padding-block: clamp(5rem, 14vh, 9rem) clamp(5rem, 13vh, 8.5rem);
   }
 
-  /* The conviction is set large, next to the question it answers. */
+  .wie-head h2 {
+    text-align: center;
+  }
+
+  /* The conviction closes the plan, set large and centred under the plots it answers for. */
   .why {
-    margin-top: 1.75rem;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    max-width: 46rem;
+    margin-inline: auto;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--fs-statement);
     line-height: 1.2;
     letter-spacing: -0.01em;
+    text-align: center;
     text-wrap: balance;
   }
 
@@ -1177,16 +1184,6 @@ const schema = {
       grid-column: 5 / -1;
     }
 
-    /* The conviction starts on the halfway line, above the boundary the two plots share. */
-    .wie-head h2 {
-      grid-column: 1 / span 6;
-    }
-
-    .wie-head .why {
-      grid-column: 7 / -1;
-      margin-top: 0.35rem;
-    }
-
     .cta h2 span {
       display: block;
     }
@@ -1447,9 +1444,8 @@ const schema = {
 
     <section class="beat wie ground-paper" aria-labelledby="wie">
       <div class="canvas">
-        <div class="grid wie-head">
+        <div class="wie-head">
           <h2 id="wie">Wie bouwt hier?</h2>
-          <p class="why">We doen dit omdat het niet normaal is dat wie het belangrijkste werk doet, de slechtste tools krijgt. <span class="also">Wie de wereld beter maakt, hoort dat niet alleen te doen.</span></p>
         </div>
         {metNico ? (
         <p class="pair pair--three"><span>Anton brengt organisaties bijeen,</span> <span>Frederik ontwerpt samen met hen,</span> <span>Nico bouwt het om jaren mee te gaan.</span></p>
@@ -1512,7 +1508,7 @@ const schema = {
           <span class="stone" aria-hidden="true"></span>
           <div class="plot ground-sheet">
             <div class="plot-head">
-              <img class="plot-photo" src="/images/anton-400.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
+              <img class="plot-photo" src="/images/anton-200.webp" srcset="/images/anton-200.webp 1x, /images/anton-400.webp 2x, /images/anton-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
               <div>
                 <h3 class="plot-name">Anton Aerts</h3>
                 <p class="plot-role">Partnerschappen &amp; support</p>
@@ -1526,7 +1522,7 @@ const schema = {
           </div>
           <div class="plot ground-sage">
             <div class="plot-head">
-              <img class="plot-photo" src="/images/frederik-400.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
+              <img class="plot-photo" src="/images/frederik-200.webp" srcset="/images/frederik-200.webp 1x, /images/frederik-400.webp 2x, /images/frederik-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
               <div>
                 <h3 class="plot-name">Frederik Vincx</h3>
                 <p class="plot-role">{frederikRole}</p>
@@ -1561,6 +1557,7 @@ const schema = {
           </div>
           )}
         </div>
+        <p class="why">We doen dit omdat het niet normaal is dat wie het belangrijkste werk doet, de slechtste tools krijgt. <span class="also">Wie de wereld beter maakt, hoort dat niet alleen te doen.</span></p>
       </div>
     </section>
 
