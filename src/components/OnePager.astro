@@ -408,10 +408,6 @@ const schema = {
       font-size: min(14.5cqi, 6.5rem);
     }
 
-    .hero-how .tag {
-      font-size: clamp(0.875rem, 2.1cqi, 1.0625rem);
-    }
-
     .hero-how p {
       font-size: clamp(1.0625rem, 2.7cqi, 1.3125rem);
     }
@@ -473,18 +469,13 @@ const schema = {
     margin-block: clamp(0.75rem, min(2.6vw, 2.4vh), 2.25rem) clamp(0.75rem, min(2.2vw, 2vh), 1.75rem);
   }
 
-  /* How it works: a label and one short paragraph, the way a sign in the field explains the plot. */
+  /* How it works, in one short paragraph under the boundary. */
   .hero-how {
     max-width: 30rem;
     margin-top: clamp(0.75rem, 2vh, 1.5rem);
   }
 
-  .hero-how .tag {
-    font-size: var(--fs-small);
-  }
-
   .hero-how p {
-    margin-top: 0.75rem;
     color: var(--fg-soft);
     text-wrap: pretty;
   }
@@ -492,15 +483,18 @@ const schema = {
   /* ---------- 2. Opening: the night sheet ---------- */
 
   .opening {
+    --fs-opening: var(--fs-h2);
     --opening-top: clamp(2rem, 5vh, 4.25rem);
     --opening-bottom: clamp(3.5rem, 9vh, 6rem);
     display: flex;
     flex-direction: column;
     padding-block: var(--opening-top) var(--opening-bottom);
     /* The hero's field runs into this sheet, so only its lower edge is drawn.
-       Nothing here runs off the sheet, so it need not clip: the plaque stands up into the field. */
+       The plaque stands up into the field, so only the sides clip: the boundary lines and the
+       hands still run off the sheet sideways without widening the page. */
     border-bottom: 1px solid var(--grove-edge);
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
     /* A plastered yard wall over a paved floor, full width and standing on the sheet's foot.
        Its top already fades into the grove green, so a tall sheet simply shows more green above. */
     background: url('/images/opening/yard-1774.webp') center bottom / 100% auto no-repeat var(--bg);
@@ -516,22 +510,6 @@ const schema = {
     position: relative;
   }
 
-  /* A sign in the field: ochre with dark ink in every theme, squared off like the buttons,
-     set a touch off level like the boundaries. */
-  .tag {
-    display: inline-block;
-    rotate: -0.55deg;
-    transform-origin: 0 100%;
-    padding: 0.3em 0.7em 0.35em;
-    border-radius: 2px;
-    background: var(--green-accent);
-    color: var(--on-dawn);
-    font-family: var(--font-display);
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-  }
-
   /* The opening's name is planted at the foot of the field above it, surveyed
      like the nameplate: a label over a slightly-off-level boundary with a
      stone at each post, not a sign painted on a plank. */
@@ -540,6 +518,8 @@ const schema = {
     top: calc(-1 * var(--opening-top) - 0.75rem);
     translate: 0 -100%;
     width: fit-content;
+    /* Once the title wraps, the right post still stands inside the margin. */
+    max-width: calc(100% - 2 * var(--pad));
   }
 
   .plaque-label {
@@ -547,11 +527,12 @@ const schema = {
     width: fit-content;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    /* Set like the paragraphs beneath it; only the ochre and the boundary mark it as the title. */
+    font-size: var(--fs-opening);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
     color: var(--accent);
-    white-space: nowrap;
+    text-wrap: balance;
   }
 
   .plaque .boundary {
@@ -573,7 +554,7 @@ const schema = {
     max-width: 24ch;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--fs-h2);
+    font-size: var(--fs-opening);
     /* Running copy at display size: looser than a headline, tighter than body text. */
     line-height: 1.25;
     letter-spacing: -0.02em;
@@ -622,6 +603,7 @@ const schema = {
     /* Both measures are taken on the sheet (cqw), so the column and the drawing agree on them. */
     .opening {
       container-type: inline-size;
+      --fs-opening: clamp(1.5rem, 2.2vw, 2.125rem);
       --text-w: max(22rem, 0.525 * min(100cqw - 2 * var(--pad), 72rem));
       --art-x: calc(max(var(--pad), (100cqw - 72rem) / 2) + var(--text-w) + var(--gap));
     }
@@ -638,7 +620,6 @@ const schema = {
 
     .opening-head .hook,
     .opening-body .hook.answer {
-      font-size: clamp(1.5rem, 2.2vw, 2.125rem);
       max-width: none;
     }
 
@@ -1526,7 +1507,6 @@ const schema = {
           <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
         </div>
         <div class="hero-how">
-          <h2 class="tag">Zo werkt het</h2>
           <p>Met onze softwarestudio brengen we sociale organisaties met hetzelfde probleem samen rond één softwarepakket. We bedenken het samen, wij bouwen en onderhouden, en de prijs volgt wat je kan dragen.</p>
         </div>
       </div>
@@ -1548,7 +1528,7 @@ const schema = {
     <section class="beat opening ground-grove" aria-labelledby="haak">
       <div class="canvas">
         <div class="plaque">
-          <h2 class="plaque-label" id="haak">Waarom Gemeen Goed</h2>
+          <h2 class="plaque-label" id="haak">Wat je samen doet, doe je beter</h2>
           <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
         </div>
         <div class="opening-head">
