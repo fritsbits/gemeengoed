@@ -81,17 +81,15 @@ const schema = {
 <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
 <style is:global>
   :root {
-    /* Few steps, steep contrast. The three poster sizes also listen to the viewport height,
-       so the name, the hook and "Wij wel." share the first screen on a low laptop. */
+    /* Few steps, steep contrast. The poster sizes also listen to the viewport height,
+       so a low laptop still fits them on one screen. */
     --fs-small: 0.875rem;
     --fs-body: 1.0625rem;
     --fs-lede: 1.25rem;
     --fs-h3: 1.5rem;
     --fs-statement: clamp(1.5rem, 2.7vw, 2.25rem);
     --fs-h2: clamp(2rem, 5vw, 4rem);
-    --fs-hook: clamp(1.7rem, min(9.4vw, 9.2vh), 5.5rem);
     --fs-name: clamp(2.5rem, min(12.6vw, 15vh), 9rem);
-    --fs-punch: clamp(3.5rem, min(17vw, 17.5vh), 10rem);
     --fs-numeral: clamp(3rem, 6vw, 4.5rem);
     --fs-year: clamp(3.5rem, min(11vw, 15vh), 7.5rem);
 
@@ -235,7 +233,9 @@ const schema = {
     align-items: center;
     gap: 0.75rem;
     min-height: 3.5rem;
-    padding: 0.375rem 1.5rem;
+    /* Less padding on the trailing-arrow side than the text side, so the icon
+       reads as optically centered in its gap instead of pushed outward. */
+    padding: 0.375rem 1.375rem 0.375rem 1.5rem;
     border: 1px solid var(--btn-line);
     border-radius: 2px;
     background: var(--btn-bg);
@@ -282,9 +282,11 @@ const schema = {
     --btn-line-hover: var(--on-dawn);
   }
 
-  /* The face sits in the button's own corner, cut like the portraits further up. */
+  /* The face sits in the button's own corner, cut like the portraits further up.
+     Its icon leads instead of trailing, so the padding sides swap versus the base button. */
   .btn--face {
     padding-left: 0.375rem;
+    padding-right: 1.5rem;
   }
 
   .btn-face {
@@ -295,17 +297,129 @@ const schema = {
     clip-path: var(--cut-a);
   }
 
-  /* ---------- 1. Hero: the nameplate ---------- */
+  /* ---------- 1. Hero: the nameplate and the stump ---------- */
 
+  /* The grain strip is scaled to the scene: its ear tips stand level with the scene's field
+     and its ears are the scene's size. Below the scene the strip runs on as a green foot,
+     which fades into the grove sheet that follows. --lift is how far that foot raises the scene. */
   .hero {
-    padding-block: clamp(1.25rem, 3.5vh, 2.75rem) clamp(1.75rem, 4.5vh, 4rem);
+    --scene-w: min(160vw, 50rem);
+    --scene-h: calc(var(--scene-w) / 1.5);
+    --field-h: calc(var(--scene-h) * 0.592);
+    --lift: calc(var(--scene-h) * 0.305);
+    display: flex;
+    flex-direction: column;
+    padding-top: clamp(1.25rem, 3.5vh, 2.75rem);
   }
 
-  .eyebrow {
-    font-size: var(--fs-small);
-    letter-spacing: 0.01em;
-    color: var(--fg-soft);
-    margin-bottom: clamp(0.75rem, 2.5vh, 2.25rem);
+  .hero-copy {
+    width: 100%;
+    max-width: calc(72rem + 2 * var(--pad));
+    margin-inline: auto;
+    padding-inline: var(--pad);
+  }
+
+  .hero-art {
+    position: relative;
+    height: calc(var(--scene-h) + var(--lift));
+    margin-top: clamp(1rem, 5vw, 2.5rem);
+  }
+
+  /* Above the drawing, the side boundaries fade out before they reach it. */
+  @media (max-width: 55.99rem) {
+    .hero .nameplate::before,
+    .hero .nameplate::after {
+      bottom: calc(-1 * clamp(1rem, 5vw, 2.5rem));
+      background: linear-gradient(to bottom, var(--rule-c) calc(100% - 5rem), transparent);
+    }
+  }
+
+  /* On a phone the stump and its helping hands stay in view.
+     The crop falls in the sky between the waiting figures and the climber, not through a person. */
+  .hero-scene {
+    position: absolute;
+    z-index: 1;
+    bottom: var(--lift);
+    left: max(100% - var(--scene-w), min(0px, 50% - 0.655 * var(--scene-w)));
+    width: var(--scene-w);
+    max-width: none;
+    height: auto;
+    /* The scene's own field stops in a ragged edge; the strip in front hides it,
+       and the sides fade into the sage in case a sliver still shows.
+       The top fades too: the drawing's sky carries a faint grain the flat sheet does not. */
+    mask-image:
+      linear-gradient(to right, transparent, #000 6%, #000 94%, transparent),
+      linear-gradient(to bottom, transparent, #000 5%);
+    mask-composite: intersect;
+  }
+
+  /* One seamless tile, repeated across the whole sheet, in front of the scene's field.
+     Its foot fades out over the grove green painted underneath, so the field closes onto
+     the next sheet in either theme. */
+  .hero-field {
+    position: absolute;
+    z-index: 2;
+    inset: auto 0 0;
+    height: var(--field-h);
+    background:
+      image-set(url('/images/hero/grain-618.webp') 1x, url('/images/hero/grain-1236.webp') 2x) left top / auto 100% repeat-x,
+      linear-gradient(transparent 50%, var(--grove) 50%);
+    pointer-events: none;
+  }
+
+  @media (min-width: 56rem) {
+    /* The scene and the copy form one composition, centred on the sheet.
+       Its left edge lines up the first waiting figure (19% into the scene) with the page margin,
+       and the copy starts where the last climber ends (93%).
+       The sheet fills the first screen; the scene grows with it up to its native 1536px.
+       The copy stands centred in the sky above the field. */
+    .hero {
+      --scene-w: min(66vw, (100svh - 3.5rem) / 1.305 * 1.5, 96rem);
+      --copy-w: min(44rem, 100% - 2 * var(--pad) - 0.74 * var(--scene-w) - 2 * var(--gap));
+      --comp-x: max(var(--pad), (100% - 0.74 * var(--scene-w) - 2 * var(--gap) - var(--copy-w)) / 2);
+      min-height: max(100svh, var(--scene-h) + var(--lift) + 3.5rem);
+      justify-content: center;
+      padding-block: clamp(1.5rem, 4vh, 3rem) calc(var(--field-h) + clamp(1.5rem, 4vh, 3rem));
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      container-type: inline-size;
+      width: var(--copy-w);
+      max-width: none;
+      margin-left: calc(var(--comp-x) + 0.74 * var(--scene-w) + 2 * var(--gap));
+      padding-inline: 0;
+    }
+
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      margin: 0;
+    }
+
+    .hero-scene {
+      left: calc(var(--comp-x) - 0.19 * var(--scene-w));
+    }
+
+    /* The title's longest line fills the column; the explainer grows a little with it. */
+    .hero h1 {
+      font-size: min(14.5cqi, 6.5rem);
+    }
+
+    .hero-how .tag {
+      font-size: clamp(0.875rem, 2.1cqi, 1.0625rem);
+    }
+
+    .hero-how p {
+      font-size: clamp(1.0625rem, 2.7cqi, 1.3125rem);
+    }
+
+    /* The boundary starts at the post, so it never runs through the drawing. */
+    .hero .boundary::before {
+      left: calc(-1 * var(--gutter));
+    }
   }
 
   /* As wide as the name, so the ochre boundary measures exactly the wordmark. */
@@ -320,8 +434,8 @@ const schema = {
   .nameplate::after {
     content: "";
     position: absolute;
-    top: -40rem;
-    bottom: -40rem;
+    top: -100vh;
+    bottom: -100vh;
     width: 1px;
     background: var(--rule-c);
     pointer-events: none;
@@ -339,41 +453,109 @@ const schema = {
 
   h1 {
     font-size: var(--fs-name);
-    line-height: 0.95;
+    line-height: 0.98;
     letter-spacing: -0.025em;
+  }
+
+  /* The title is set in three lines, the name in the middle one in italic. */
+  .hero h1 > * {
+    display: block;
     white-space: nowrap;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -0.03em;
   }
 
   .hero .boundary {
     margin-block: clamp(0.75rem, min(2.6vw, 2.4vh), 2.25rem) clamp(0.75rem, min(2.2vw, 2vh), 1.75rem);
   }
 
-  /* No width of its own, so a long tagline never stretches the nameplate past the name. */
-  .tagline {
-    width: 0;
-    min-width: 100%;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 500;
-    font-size: clamp(1.25rem, min(2.7vw, 3.6vh), 2.25rem);
-    line-height: 1.2;
-    color: var(--moss-deep);
-    text-wrap: balance;
+  /* How it works: a label and one short paragraph, the way a sign in the field explains the plot. */
+  .hero-how {
+    max-width: 30rem;
+    margin-top: clamp(0.75rem, 2vh, 1.5rem);
   }
 
-  /* Each sentence of the tagline keeps its own line where the width allows it. */
-  .tagline span {
-    display: block;
+  .hero-how .tag {
+    font-size: var(--fs-small);
+  }
+
+  .hero-how p {
+    margin-top: 0.75rem;
+    color: var(--fg-soft);
+    text-wrap: pretty;
   }
 
   /* ---------- 2. Opening: the night sheet ---------- */
 
   .opening {
-    min-height: min(100svh, 62rem);
+    --opening-top: clamp(2rem, 5vh, 4.25rem);
+    --opening-bottom: clamp(3.5rem, 9vh, 6rem);
     display: flex;
     flex-direction: column;
-    padding-block: clamp(2rem, 5vh, 4.25rem) clamp(3.5rem, 9vh, 6rem);
-    border-block: 1px solid var(--grove-edge);
+    padding-block: var(--opening-top) var(--opening-bottom);
+    /* The hero's field runs into this sheet, so only its lower edge is drawn.
+       Nothing here runs off the sheet, so it need not clip: the plaque stands up into the field. */
+    border-bottom: 1px solid var(--grove-edge);
+    overflow: visible;
+    /* A plastered yard wall over a paved floor, full width and standing on the sheet's foot.
+       Its top already fades into the grove green, so a tall sheet simply shows more green above. */
+    background: url('/images/opening/yard-1774.webp') center bottom / 100% auto no-repeat var(--bg);
+  }
+
+  @media (max-width: 47.99rem) {
+    .opening {
+      background-image: url('/images/opening/yard-887.webp');
+    }
+  }
+
+  .opening > .canvas {
+    position: relative;
+  }
+
+  /* A sign in the field: ochre with dark ink in every theme, squared off like the buttons,
+     set a touch off level like the boundaries. */
+  .tag {
+    display: inline-block;
+    rotate: -0.55deg;
+    transform-origin: 0 100%;
+    padding: 0.3em 0.7em 0.35em;
+    border-radius: 2px;
+    background: var(--green-accent);
+    color: var(--on-dawn);
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  /* The opening's name is planted at the foot of the field above it, surveyed
+     like the nameplate: a label over a slightly-off-level boundary with a
+     stone at each post, not a sign painted on a plank. */
+  .plaque {
+    position: absolute;
+    top: calc(-1 * var(--opening-top) - 0.75rem);
+    translate: 0 -100%;
+    width: fit-content;
+  }
+
+  .plaque-label {
+    display: block;
+    width: fit-content;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .plaque .boundary {
+    margin-top: 0.6rem;
   }
 
   .opening > .canvas {
@@ -385,46 +567,88 @@ const schema = {
     gap: clamp(3rem, 8vh, 5rem);
   }
 
+  /* Three paragraphs in one voice, at the size of a section heading:
+     the problem, how it plays out, and the answer in the ground's accent. */
   .hook {
-    font-size: var(--fs-hook);
-    line-height: 1.02;
-    letter-spacing: -0.025em;
-    overflow-wrap: break-word;
-  }
-
-  /* The peak of the page: nothing else is set this large. */
-  .hook .punch {
-    display: block;
-    margin-top: 0.12em;
-    font-style: italic;
-    font-weight: 500;
-    font-size: var(--fs-punch);
-    line-height: 0.95;
-    letter-spacing: -0.03em;
-    color: var(--accent);
-  }
-
-  .opening-body .boundary {
-    margin-bottom: clamp(2rem, 5vh, 3rem);
-  }
-
-  .opening-body .problem {
-    color: var(--fg-soft);
-    max-width: 34rem;
-  }
-
-  .opening-body .answer {
+    max-width: 24ch;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: var(--fs-statement);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    margin-top: 2rem;
+    font-size: var(--fs-h2);
+    /* Running copy at display size: looser than a headline, tighter than body text. */
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    overflow-wrap: break-word;
     text-wrap: balance;
   }
 
+  /* Each sentence starts its own line, so no word is left hanging after a full stop. */
+  .hook span {
+    display: block;
+  }
+
+  /* On a wide screen the two statements hold the first screen between them. */
+  @media (min-width: 56rem) {
+    .opening {
+      min-height: min(100svh, 62rem);
+    }
+  }
+
+  .opening-head .hook + .hook {
+    margin-top: 0.75em;
+  }
+
+  .answer {
+    color: var(--accent);
+  }
+
   .jump {
-    margin-top: 2rem;
+    margin-top: clamp(2rem, 5vh, 3rem);
+  }
+
+  /* The hands reach in from outside the sheet: the drawing is pinned to its right edge
+     and its foot, where the sleeves are cut off. */
+  .opening-art {
+    display: block;
+    align-self: flex-end;
+    width: min(100%, 36rem);
+    height: auto;
+    margin: 2rem 0 calc(-1 * var(--opening-bottom));
+  }
+
+  /* On a wide screen the words keep a column of about half the canvas.
+     The wheel fills the room to its right; the drawing's faded left edge may slip under the column,
+     since the wheel itself only starts a fifth of the way in. */
+  @media (min-width: 56rem) {
+    /* Both measures are taken on the sheet (cqw), so the column and the drawing agree on them. */
+    .opening {
+      container-type: inline-size;
+      --text-w: max(22rem, 0.525 * min(100cqw - 2 * var(--pad), 72rem));
+      --art-x: calc(max(var(--pad), (100cqw - 72rem) / 2) + var(--text-w) + var(--gap));
+    }
+
+    .opening > .canvas {
+      justify-content: flex-start;
+      gap: clamp(1.25rem, 3vh, 2rem);
+    }
+
+    .opening-head,
+    .opening-body {
+      width: var(--text-w);
+    }
+
+    .opening-head .hook,
+    .opening-body .hook.answer {
+      font-size: clamp(1.5rem, 2.2vw, 2.125rem);
+      max-width: none;
+    }
+
+    .opening-art {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: calc((100cqw - var(--art-x) - var(--gap)) / 0.8);
+      margin: 0;
+    }
   }
 
   /* ---------- 3. Aanpak: a sage plot laid on the paper ---------- */
@@ -1107,18 +1331,6 @@ const schema = {
       column-gap: var(--gap);
     }
 
-    .opening-body .problem {
-      grid-column: 1 / span 5;
-    }
-
-    .opening-body .reply {
-      grid-column: 7 / -1;
-    }
-
-    .opening-body .answer {
-      margin-top: 0;
-    }
-
     .werk-head h2 {
       grid-column: 1 / span 7;
     }
@@ -1225,9 +1437,8 @@ const schema = {
     }
   }
 
-  /* Wide enough for the hook and the quote to hold their lines. */
+  /* Wide enough for the quote to hold its lines. */
   @media (min-width: 80rem) {
-    .hook span,
     .quote p span {
       display: block;
     }
@@ -1254,6 +1465,7 @@ const schema = {
 
     .boundary,
     .stone,
+    .hero-art,
     .plan .parcels,
     .nameplate::before,
     .nameplate::after,
@@ -1294,6 +1506,7 @@ const schema = {
        The sheet, the name and the hairline are there from the first frame. */
     .hero .boundary::after {
       animation: survey 1.3s var(--ease-out) 0.3s both;
+      will-change: scale;
     }
   }
 
@@ -1306,35 +1519,62 @@ const schema = {
 <body>
   <main>
 
-    <header class="beat hero ground-sage">
-      <div class="canvas">
-        <p class="eyebrow">Sociale softwarestudio</p>
+    <header class="beat hero ground-meadow">
+      <div class="hero-copy">
         <div class="nameplate">
-          <h1>Gemeen Goed</h1>
+          <h1><span>Software hoort</span> <em>Gemeen Goed</em> <span>te zijn.</span></h1>
           <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
-          <p class="tagline"><span>Software voor sociale organisaties.</span> <span>Samen gebouwd, samen gedragen.</span></p>
         </div>
+        <div class="hero-how">
+          <h2 class="tag">Zo werkt het</h2>
+          <p>Met onze softwarestudio brengen we sociale organisaties met hetzelfde probleem samen rond één softwarepakket. We bedenken het samen, wij bouwen en onderhouden, en de prijs volgt wat je kan dragen.</p>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img
+          class="hero-scene"
+          src="/images/hero/scene-1536.webp"
+          srcset="/images/hero/scene-1024.webp 1024w, /images/hero/scene-1536.webp 1536w"
+          sizes="(min-width: 56rem) min(66vw, 88rem), min(160vw, 50rem)"
+          width="1536"
+          height="1024"
+          alt="Mensen uit verschillende beroepen helpen elkaar een grote boomstronk op, midden in een graanveld."
+          fetchpriority="high"
+        >
+        <div class="hero-field" aria-hidden="true"></div>
       </div>
     </header>
 
     <section class="beat opening ground-grove" aria-labelledby="haak">
       <div class="canvas">
-        <h2 class="hook" id="haak"><span>Grote softwarebedrijven</span> <span>liggen niet wakker</span> <span>van jouw sector.</span> <span class="punch">Wij wel.</span></h2>
+        <div class="plaque">
+          <h2 class="plaque-label" id="haak">Waarom Gemeen Goed</h2>
+          <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
+        </div>
+        <div class="opening-head">
+          <p class="hook">Vandaag betaalt elke organisatie apart voor hetzelfde wiel.</p>
+          <p class="hook">De groten laten dure software op maat maken. De rest behelpt zich met pakketten die voor iemand anders gemaakt zijn, of haalt acrobatentoeren uit met Excel.</p>
+          <p class="hook">Dat is verspilling van tijd en geld. Werk je samen, dan bereik je zoveel meer.</p>
+        </div>
         <div class="opening-body">
-          <div class="boundary boundary--plain boundary--falling" aria-hidden="true"></div>
-          <div class="grid">
-            <p class="problem">Vandaag betaalt elke organisatie apart voor hetzelfde wiel. De groten laten dure software op maat maken. De rest behelpt zich met pakketten die voor iemand anders gemaakt zijn, of haalt acrobatentoeren uit met Excel.</p>
-            <div class="reply">
-              <p class="answer">Goeie software hoort gemeengoed te zijn. Dus bouwen we ze samen met een hele sector, voor organisaties die anders uit de boot vallen.</p>
-              <p class="jump">
-                <a class="btn" href="#contact">Praat met ons
-                  <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg>
-                </a>
-              </p>
-            </div>
-          </div>
+          <p class="hook answer"><span>Dus bouwt Gemeen Goed dat wiel één keer, samen met de hele sector.</span> <span>Software die past bij jullie werk, aan een prijs die jullie kunnen dragen.</span></p>
+          <p class="jump">
+            <a class="btn" href="#contact">Praat met ons
+              <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg>
+            </a>
+          </p>
         </div>
       </div>
+      <img
+        class="opening-art"
+        src="/images/opening/hands-1536.webp"
+        srcset="/images/opening/hands-768.webp 768w, /images/opening/hands-1536.webp 1536w"
+        sizes="(min-width: 56rem) 60vw, min(100vw, 36rem)"
+        width="1536"
+        height="1024"
+        alt="Handen van verschillende mensen houden samen één houten wagenwiel vast."
+        loading="lazy"
+      >
     </section>
 
     <section class="beat aanpak ground-paper" aria-labelledby="aanpak">

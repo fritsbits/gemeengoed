@@ -78,6 +78,13 @@
   /* The morning sheet stays a light ochre sheet in both themes, so its ink stays dark too. */
   --dawn: #C79A5C;
   --on-dawn: #20261B;
+  /* The hero's meadow is the illustration's own sky, sampled from the drawing.
+     Like the morning sheet it stays light in both themes, because the drawing does. */
+  --meadow: #D9DDC0;
+  --on-meadow: #20261B;
+  --on-meadow-soft: #4B5240;
+  --meadow-moss: #4E602F;
+  --meadow-ochre: #8F6228;
   /* Ochre for figures on paper-alt and sage, where plain ochre drops under 3:1. */
   --ochre-deep: #8F6228;
   /* Surveyor lines, a step darker than --line so they survive an office monitor. */
@@ -185,6 +192,18 @@
   --link-hover: var(--ink);
 }
 
+.ground-meadow {
+  --bg: var(--meadow);
+  --fg: var(--on-meadow);
+  --fg-soft: var(--on-meadow-soft);
+  --accent: var(--meadow-ochre);
+  --rule-c: color-mix(in srgb, var(--on-meadow) 42%, var(--meadow));
+  --focus: var(--on-meadow);
+  --link-hover: var(--on-meadow);
+  /* The tagline's moss, held at its light-theme value. */
+  --moss-deep: var(--meadow-moss);
+}
+
 .ground-ink {
   --bg: var(--night);
   --fg: var(--on-deep);
@@ -248,6 +267,7 @@ body {
   font-family: var(--font-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* One link style for the whole site: ink text, ochre underline, moss on hover.
@@ -329,6 +349,11 @@ a:focus-visible {
     --sheet: #fff;
     --dawn: #fff;
     --on-dawn: #000;
+    --meadow: #fff;
+    --on-meadow: #000;
+    --on-meadow-soft: #333;
+    --meadow-moss: #333;
+    --meadow-ochre: #666;
     --ochre-deep: #666;
     --rule: #999;
   }
