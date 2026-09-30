@@ -67,8 +67,12 @@
   --band: #5E6E37;
   --on-deep: #F1ECDD;
   --on-deep-soft: #C4BFA8;
+  /* The grove is the green under the hero's field, which is a drawing and does not change.
+     So the sheet and its ink stay the same in both themes, like the meadow. */
   --grove: #526547;
-  --grove-edge: transparent;
+  --on-grove: #F1ECDD;
+  --on-grove-soft: #E8E1CD;
+  --grove-accent: #E0B77B;
   --forest: #425536;
   --on-green: #F1ECDD;
   --on-green-soft: #E8E1CD;
@@ -80,7 +84,7 @@
   --on-dawn: #20261B;
   /* The hero's meadow is the illustration's own sky, sampled from the drawing.
      Like the morning sheet it stays light in both themes, because the drawing does. */
-  --meadow: #D9DDC0;
+  --meadow: #CDDEC2;
   --on-meadow: #20261B;
   --on-meadow-soft: #4B5240;
   --meadow-moss: #4E602F;
@@ -110,8 +114,6 @@
     --band: #34421F;
     --on-deep: #ECE6D2;
     --on-deep-soft: #B9B49E;
-    --grove: #3E5030;
-    --grove-edge: #657153;
     --forest: #2F3F25;
     --on-green: #ECE6D2;
     --on-green-soft: #D8D2BE;
@@ -138,8 +140,6 @@
   --band: #34421F;
   --on-deep: #ECE6D2;
   --on-deep-soft: #B9B49E;
-  --grove: #3E5030;
-  --grove-edge: #657153;
   --forest: #2F3F25;
   --on-green: #ECE6D2;
   --on-green-soft: #D8D2BE;
@@ -216,12 +216,12 @@
 
 .ground-grove {
   --bg: var(--grove);
-  --fg: var(--on-green);
-  --fg-soft: var(--on-green-soft);
-  --accent: var(--green-accent);
-  --rule-c: color-mix(in srgb, var(--on-green) 30%, var(--grove));
-  --focus: var(--green-accent);
-  --link-hover: var(--green-accent);
+  --fg: var(--on-grove);
+  --fg-soft: var(--on-grove-soft);
+  --accent: var(--grove-accent);
+  --rule-c: color-mix(in srgb, var(--on-grove) 30%, var(--grove));
+  --focus: var(--grove-accent);
+  --link-hover: var(--grove-accent);
 }
 
 .ground-forest {
@@ -340,7 +340,9 @@ a:focus-visible {
     --on-deep: #000;
     --on-deep-soft: #333;
     --grove: #fff;
-    --grove-edge: transparent;
+    --on-grove: #000;
+    --on-grove-soft: #333;
+    --grove-accent: #000;
     --forest: #fff;
     --on-green: #000;
     --on-green-soft: #333;
