@@ -516,14 +516,29 @@ const schema = {
       margin: 0;
     }
 
-    /* The boundary spans the column here, not the name: the title is set smaller than the column is wide. */
+    /* The boundary spans the column or the title, whichever is wider,
+       so the right boundary always stands past the end of the title. */
     .hero .nameplate {
-      width: 100%;
+      min-width: 100%;
+      max-width: none;
     }
 
     /* Each clause stands on one line. It is longer than the column, so it runs on over the drawing's sky. */
     .hero h1 > * {
       white-space: nowrap;
+    }
+
+    /* Past the column the right boundary stands over the drawing, so it fades out below its post
+       before it reaches the figures. The boundary ends 100vh below the nameplate. */
+    .hero .nameplate::after {
+      background: linear-gradient(to bottom, var(--rule-c) calc(100% - 100vh), transparent calc(100% - 100vh + 4rem));
+    }
+
+    /* A column this wide holds the whole title, so the boundary stands beside the drawing and runs on. */
+    @container (min-width: 41rem) {
+      .hero .nameplate::after {
+        background: var(--rule-c);
+      }
     }
 
     /* The size follows the column: about 21 em to the line, so the promise takes three.
