@@ -521,6 +521,11 @@ const schema = {
       width: 100%;
     }
 
+    /* Each clause stands on one line. It is longer than the column, so it runs on over the drawing's sky. */
+    .hero h1 > * {
+      white-space: nowrap;
+    }
+
     /* The size follows the column: about 21 em to the line, so the promise takes three.
        Where the column has room to spare, the size grows with it more slowly. */
     .hero .hero-how {
@@ -1148,6 +1153,25 @@ const schema = {
     clip-path: var(--cut-b);
   }
 
+  /* Two drawings of the same face: one looking up at the heading, one looking at the reader.
+     The reader's look is the one in the flow, so it is what shows without the script. */
+  .plot-photo--gaze {
+    position: relative;
+  }
+
+  .plot-photo--gaze > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gaze-up {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+  }
+
   .plot-name {
     font-size: clamp(1.5rem, 2.6vw, 2rem);
     line-height: 1.1;
@@ -1557,6 +1581,16 @@ const schema = {
       animation: survey 1.3s var(--ease-out) 0.3s both;
       will-change: scale;
     }
+
+    /* A cut, not a fade: halfway through a fade the face has four eyes. */
+    .plot-photo--gaze[data-gaze="up"] .gaze-up {
+      visibility: visible;
+    }
+
+    /* The second maker follows the first by a beat, both ways. */
+    .plot + .plot .gaze-up {
+      transition: visibility 0s 0.25s;
+    }
   }
 
   /* Forced colours paint every background over and drop every shadow, which would erase
@@ -1852,7 +1886,10 @@ const schema = {
           <span class="stone" aria-hidden="true"></span>
           <div class="plot ground-sheet">
             <div class="plot-head">
-              <img class="plot-photo" src="/images/anton-200.webp" srcset="/images/anton-200.webp 1x, /images/anton-400.webp 2x, /images/anton-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
+              <span class="plot-photo plot-photo--gaze">
+                <img src="/images/anton-200.webp" srcset="/images/anton-200.webp 1x, /images/anton-400.webp 2x, /images/anton-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
+                <img class="gaze-up" src="/images/anton-boven-200.webp" srcset="/images/anton-boven-200.webp 1x, /images/anton-boven-400.webp 2x, /images/anton-boven-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
+              </span>
               <div>
                 <h3 class="plot-name">Anton Aerts</h3>
                 <p class="plot-role">Partnerschappen &amp; support</p>
@@ -1866,7 +1903,10 @@ const schema = {
           </div>
           <div class="plot ground-sage">
             <div class="plot-head">
-              <img class="plot-photo" src="/images/frederik-200.webp" srcset="/images/frederik-200.webp 1x, /images/frederik-400.webp 2x, /images/frederik-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
+              <span class="plot-photo plot-photo--gaze">
+                <img src="/images/frederik-200.webp" srcset="/images/frederik-200.webp 1x, /images/frederik-400.webp 2x, /images/frederik-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
+                <img class="gaze-up" src="/images/frederik-boven-200.webp" srcset="/images/frederik-boven-200.webp 1x, /images/frederik-boven-400.webp 2x, /images/frederik-boven-600.webp 3x" alt="" width="200" height="200" loading="lazy" decoding="async">
+              </span>
               <div>
                 <h3 class="plot-name">Frederik Vincx</h3>
                 <p class="plot-role">{frederikRole}</p>
@@ -1933,5 +1973,6 @@ const schema = {
   </main>
 
   <footer class="colophon ground-forest">&copy; 2026 De lieve jongens van Gemeen Goed</footer>
+  <script is:inline src="/scripts/gaze.js" defer></script>
 </body>
 </html>
