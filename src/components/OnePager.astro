@@ -89,7 +89,7 @@ const schema = {
     --fs-h3: 1.5rem;
     --fs-statement: clamp(1.5rem, 2.7vw, 2.25rem);
     --fs-h2: clamp(2rem, 5vw, 4rem);
-    --fs-name: clamp(2.5rem, min(12.6vw, 15vh), 9rem);
+    --fs-title: clamp(2rem, 3.8vw, 3.25rem);
     --fs-numeral: clamp(3rem, 6vw, 4.5rem);
     --fs-year: clamp(3.5rem, min(11vw, 15vh), 7.5rem);
 
@@ -273,6 +273,23 @@ const schema = {
     --btn-line-hover: var(--green-accent);
   }
 
+  /* The grove keeps its light-theme ink in both themes, and so do its buttons. */
+  .ground-grove .btn {
+    --btn-fg: var(--on-grove);
+    --btn-line: var(--on-grove);
+    --btn-bg-hover: var(--grove-accent);
+    --btn-line-hover: var(--grove-accent);
+  }
+
+  .ground-sage .btn {
+    --btn-bg: var(--fg);
+    --btn-fg: var(--bg);
+    --btn-line: var(--fg);
+    --btn-bg-hover: var(--moss);
+    --btn-fg-hover: var(--bg);
+    --btn-line-hover: var(--moss);
+  }
+
   .ground-dawn .btn {
     --btn-bg: var(--on-dawn);
     --btn-fg: var(--on-deep);
@@ -280,6 +297,20 @@ const schema = {
     --btn-bg-hover: var(--on-deep);
     --btn-fg-hover: var(--on-dawn);
     --btn-line-hover: var(--on-dawn);
+  }
+
+  /* The quiet button is an outline in the ground's own ink, for a link that should not lead the sheet. */
+  .btn.btn--quiet {
+    --btn-bg: transparent;
+    --btn-fg: var(--fg);
+    --btn-line: color-mix(in srgb, var(--fg) 40%, transparent);
+    --btn-bg-hover: transparent;
+    --btn-fg-hover: var(--fg);
+    --btn-line-hover: var(--fg);
+    min-height: 2.75rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-body);
   }
 
   /* The face sits in the button's own corner, cut like the portraits further up.
@@ -299,17 +330,74 @@ const schema = {
 
   /* ---------- 1. Hero: the nameplate and the stump ---------- */
 
-  /* The grain strip is scaled to the scene: its ear tips stand level with the scene's field
-     and its ears are the scene's size. Below the scene the strip runs on as a green foot,
-     which fades into the grove sheet that follows. --lift is how far that foot raises the scene. */
-  .hero {
+  /* The grain overlay stands on the sheet's bottom edge, in front of the scene's own field.
+     Its ears are drawn larger than the scene's, as the nearer grain.
+     --rise lifts the scene until the waiting figures stand knee-deep in the overlay.
+     --scene-x is the scene's left edge; the overlay hangs its tiles from it. */
+  /* The scene's width and the field's height live on the page, because the next sheet
+     reaches up into the field by a share of its height. */
+  main {
     --scene-w: min(160vw, 50rem);
+    --field-h: calc(var(--scene-w) * 0.3);
+  }
+
+  @media (min-width: 56rem) {
+    main {
+      --scene-w: min(66vw, (100svh - 3.5rem) / 1.13 * 1.5, 96rem);
+    }
+  }
+
+  .hero {
     --scene-h: calc(var(--scene-w) / 1.5);
-    --field-h: calc(var(--scene-h) * 0.592);
-    --lift: calc(var(--scene-h) * 0.305);
+    --scene-x: max(100% - var(--scene-w), min(0px, 50% - 0.644 * var(--scene-w)));
+    --tile-w: calc(var(--field-h) * 1446 / 640);
+    --rise: calc(var(--scene-h) * 0.13);
     display: flex;
     flex-direction: column;
-    padding-top: clamp(1.25rem, 3.5vh, 2.75rem);
+    padding-top: clamp(6.75rem, 12vh, 7.5rem);
+  }
+
+  /* The mark stands in the sheet's top-left corner, on the page margin, above the copy.
+     What the studio is stands under it while the nameplate's right boundary runs close
+     past the mark, and beside it once the column is wide enough. */
+  .brand {
+    position: absolute;
+    z-index: 2;
+    top: clamp(1rem, 3vw, 1.75rem);
+    left: var(--pad);
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .logo {
+    display: block;
+    width: clamp(8rem, 22vw, 11rem);
+  }
+
+  .brand-line {
+    padding-left: 0.2rem;
+    font-size: var(--fs-small);
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--fg-soft);
+  }
+
+  .logo svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .logo-sans {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+  }
+
+  .logo-serif {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
   }
 
   .hero-copy {
@@ -321,8 +409,8 @@ const schema = {
 
   .hero-art {
     position: relative;
-    height: calc(var(--scene-h) + var(--lift));
-    margin-top: clamp(1rem, 5vw, 2.5rem);
+    height: calc(var(--scene-h) + var(--rise));
+    margin-top: clamp(2.75rem, 13vw, 6.5rem);
   }
 
   /* Above the drawing, the side boundaries fade out before they reach it. */
@@ -335,17 +423,17 @@ const schema = {
   }
 
   /* On a phone the stump and its helping hands stay in view.
-     The crop falls in the sky between the waiting figures and the climber, not through a person. */
+     The crop falls where the second and third waiting figure meet, not through a person. */
   .hero-scene {
     position: absolute;
     z-index: 1;
-    bottom: var(--lift);
-    left: max(100% - var(--scene-w), min(0px, 50% - 0.655 * var(--scene-w)));
+    bottom: var(--rise);
+    left: var(--scene-x);
     width: var(--scene-w);
     max-width: none;
     height: auto;
-    /* The scene's own field stops in a ragged edge; the strip in front hides it,
-       and the sides fade into the sage in case a sliver still shows.
+    /* The scene's own field stops in a ragged edge; the overlay in front hides it,
+       and the sides fade into the sage where the field shows between the overlay's ears.
        The top fades too: the drawing's sky carries a faint grain the flat sheet does not. */
     mask-image:
       linear-gradient(to right, transparent, #000 6%, #000 94%, transparent),
@@ -353,33 +441,62 @@ const schema = {
     mask-composite: intersect;
   }
 
-  /* One seamless tile, repeated across the whole sheet, in front of the scene's field.
-     Its foot fades out over the grove green painted underneath, so the field closes onto
-     the next sheet in either theme. */
+  /* One tile, repeated across the whole sheet, in front of the scene's field.
+     The tile is the drawing followed by its mirror image, so the field repeats half as often.
+     Its tallest ears stand 14% into the tile, and a tile starts 52% into the scene,
+     so they rise against the trunk and not in front of the waiting figures.
+     The box runs six tiles out on either side, because a background cannot be placed from --scene-x.
+     The tile's foot is drawn dissolving into the grove, the ears first and the stalks last,
+     and its lowest rows are plain grove. A short wash over those rows alone sets them to
+     the next sheet's exact green, whatever the image compression did to the colour.
+     The box hangs a pixel past the sheet's edge, or a rounded edge lets the scene show through. */
   .hero-field {
+    --grain: image-set(url('/images/hero/field-723.webp') 1x, url('/images/hero/field-1446.webp') 2x);
     position: absolute;
     z-index: 2;
-    inset: auto 0 0;
-    height: var(--field-h);
+    bottom: -1px;
+    left: calc(var(--scene-x) + 0.52 * var(--scene-w) - 6 * var(--tile-w));
+    width: calc(13 * var(--tile-w));
+    height: calc(var(--field-h) + 1px);
     background:
-      image-set(url('/images/hero/grain-618.webp') 1x, url('/images/hero/grain-1236.webp') 2x) left top / auto 100% repeat-x,
-      linear-gradient(transparent 50%, var(--grove) 50%);
+      linear-gradient(transparent calc(0.94 * var(--field-h)), var(--grove) calc(0.97 * var(--field-h))),
+      var(--grain) left top / var(--tile-w) var(--field-h) repeat-x;
+    /* A scaled tile bleeds its bottom row into the top edge as a hairline; the top is empty sky anyway. */
+    clip-path: inset(2px 0 0);
     pointer-events: none;
   }
 
   @media (min-width: 56rem) {
-    /* The scene and the copy form one composition, centred on the sheet.
-       Its left edge lines up the first waiting figure (19% into the scene) with the page margin,
-       and the copy starts where the last climber ends (93%).
-       The sheet fills the first screen; the scene grows with it up to its native 1536px.
-       The copy stands centred in the sky above the field. */
+    /* The copy and the scene form one composition, centred on the sheet.
+       The copy starts on the composition's left edge, under the mark.
+       The first waiting figure (15% into the scene) stands where the copy's column ends,
+       and the composition ends where the last climber does (93%).
+       The scene grows with the screen up to its native 1536px, and the sheet ends where the field does.
+       The field runs on under the copy, so the copy ends above the field's full height.
+       --top-min keeps the title clear of the mark while its line still stands under it. */
     .hero {
-      --scene-w: min(66vw, (100svh - 3.5rem) / 1.305 * 1.5, 96rem);
-      --copy-w: min(44rem, 100% - 2 * var(--pad) - 0.74 * var(--scene-w) - 2 * var(--gap));
-      --comp-x: max(var(--pad), (100% - 0.74 * var(--scene-w) - 2 * var(--gap) - var(--copy-w)) / 2);
-      min-height: max(100svh, var(--scene-h) + var(--lift) + 3.5rem);
+      --copy-w: min(44rem, 100% - 2 * var(--pad) - 0.78 * var(--scene-w) - 2 * var(--gap));
+      --comp-x: max(var(--pad), (100% - 0.78 * var(--scene-w) - 2 * var(--gap) - var(--copy-w)) / 2);
+      --scene-x: calc(var(--comp-x) + var(--copy-w) + 2 * var(--gap) - 0.15 * var(--scene-w));
+      --top-min: 7.25rem;
+      min-height: calc(var(--scene-h) + var(--rise) + 3.5rem);
       justify-content: center;
-      padding-block: clamp(1.5rem, 4vh, 3rem) calc(var(--field-h) + clamp(1.5rem, 4vh, 3rem));
+      padding-block: clamp(var(--top-min), 15.75vh, 10.5rem) calc(var(--field-h) + clamp(1.5rem, 4vh, 2.5rem));
+    }
+
+    .brand {
+      left: var(--comp-x);
+    }
+
+    /* On a wide screen the scene's fading sky reaches under the ends of the copy's lines,
+       so the scene lies below the copy. */
+    .hero-scene {
+      z-index: 0;
+    }
+
+    /* The field can stand taller than the small tile here, even on a 1x screen. */
+    .hero-field {
+      --grain: url('/images/hero/field-1446.webp');
     }
 
     .hero-copy {
@@ -388,7 +505,7 @@ const schema = {
       container-type: inline-size;
       width: var(--copy-w);
       max-width: none;
-      margin-left: calc(var(--comp-x) + 0.74 * var(--scene-w) + 2 * var(--gap));
+      margin-left: var(--comp-x);
       padding-inline: 0;
     }
 
@@ -399,22 +516,41 @@ const schema = {
       margin: 0;
     }
 
-    .hero-scene {
-      left: calc(var(--comp-x) - 0.19 * var(--scene-w));
+    /* The boundary spans the column here, not the name: the title is set smaller than the column is wide. */
+    .hero .nameplate {
+      width: 100%;
     }
 
-    /* The title's longest line fills the column; the explainer grows a little with it. */
-    .hero h1 {
-      font-size: min(14.5cqi, 6.5rem);
+    /* The size follows the column: about 21 em to the line, so the promise takes three.
+       Where the column has room to spare, the size grows with it more slowly. */
+    .hero .hero-how {
+      max-width: none;
     }
 
-    .hero-how p {
-      font-size: clamp(1.0625rem, 2.7cqi, 1.3125rem);
+    .hero .hero-how p {
+      font-size: clamp(1.25rem, min(4.7cqi, max(1.5625rem, 4cqi)), 1.875rem);
     }
 
-    /* The boundary starts at the post, so it never runs through the drawing. */
+    /* The boundary ends at the post, so it never runs through the drawing. */
     .hero .boundary::before {
-      left: calc(-1 * var(--gutter));
+      right: calc(-1 * var(--gutter));
+    }
+  }
+
+  /* From here the copy's column is wider than the mark and its line together. */
+  @media (min-width: 64rem) {
+    .hero {
+      --top-min: 5.25rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.75rem, 1.6vw, 1.25rem);
+    }
+
+    .logo {
+      flex: none;
     }
   }
 
@@ -447,188 +583,117 @@ const schema = {
     rotate: -1.1deg;
   }
 
+  /* The page title is set at the size of the sheet titles below it. */
   h1 {
-    font-size: var(--fs-name);
+    font-size: var(--fs-title);
     line-height: 0.98;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.02em;
   }
 
-  /* The title is set in three lines, the name in the middle one in italic. */
+  /* The title is set one clause to the line. A clause wraps, evenly, where the column is too narrow for it. */
   .hero h1 > * {
     display: block;
-    white-space: nowrap;
   }
 
-  .hero h1 em {
+  .hero .boundary {
+    margin-block: clamp(1.75rem, min(5.6vw, 5.25vh), 4rem) 0;
+  }
+
+  /* What the studio does, in one sentence under the boundary. */
+  .hero-how {
+    max-width: 30rem;
+    margin-top: clamp(2.25rem, min(7vw, 5.6vh), 4rem);
+  }
+
+  .hero-how p {
+    font-size: clamp(1.25rem, 5.1vw, 1.5625rem);
+    line-height: 1.4;
+    color: var(--fg-soft);
+  }
+
+  /* ---------- 2. Opening: the grove sheet ---------- */
+
+  /* Two adjoining plots, drawn like the makers' plan further down:
+     today on one side, the answer on the other, one shared boundary between them. */
+  /* The plots reach up into the hero's field and stand in front of its lowest ears.
+     The sheet starts that much higher and stays clear there, so the field shows beside the plots.
+     Its green starts two pixels early, under the field's own green foot, so no hairline opens between them.
+     The padding keeps the corner lines, which overshoot the plots, inside the sheet. */
+  .opening {
+    --lift: calc(0.2 * var(--field-h) + 1.5rem);
+    margin-top: calc(-1 * var(--lift));
+    padding-block: 1.5rem clamp(3.5rem, 9vh, 6rem);
+    background: linear-gradient(transparent calc(var(--lift) - 2px), var(--bg) calc(var(--lift) - 2px));
+  }
+
+  .opening .plan {
+    margin-top: 0;
+  }
+
+  /* The white plot opens on the conviction, set like the sheet titles further down. */
+  .opening h2 {
+    font-size: var(--fs-title);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+
+  /* The name stands in the conviction in italic, as it does in the mark. */
+  .opening h2 em {
     font-style: italic;
     font-weight: 500;
     letter-spacing: -0.03em;
   }
 
-  .hero .boundary {
-    margin-block: clamp(0.75rem, min(2.6vw, 2.4vh), 2.25rem) clamp(0.75rem, min(2.2vw, 2vh), 1.75rem);
+  .opening h2 + .hook {
+    margin-top: clamp(1.25rem, 2.4vw, 2rem);
   }
 
-  /* How it works, in one short paragraph under the boundary. */
-  .hero-how {
-    max-width: 30rem;
-    margin-top: clamp(0.75rem, 2vh, 1.5rem);
-  }
-
-  .hero-how p {
-    color: var(--fg-soft);
-    text-wrap: pretty;
-  }
-
-  /* ---------- 2. Opening: the night sheet ---------- */
-
-  .opening {
-    --fs-opening: var(--fs-h2);
-    --opening-top: clamp(2rem, 5vh, 4.25rem);
-    --opening-bottom: clamp(3.5rem, 9vh, 6rem);
-    display: flex;
-    flex-direction: column;
-    padding-block: var(--opening-top) var(--opening-bottom);
-    /* The hero's field runs into this sheet, so only its lower edge is drawn.
-       The plaque stands up into the field, so only the sides clip: the boundary lines and the
-       hands still run off the sheet sideways without widening the page. */
-    border-bottom: 1px solid var(--grove-edge);
-    overflow-x: clip;
-    overflow-y: visible;
-    /* A plastered yard wall over a paved floor, full width and standing on the sheet's foot.
-       Its top already fades into the grove green, so a tall sheet simply shows more green above. */
-    background: url('/images/opening/yard-1774.webp') center bottom / 100% auto no-repeat var(--bg);
-  }
-
-  @media (max-width: 47.99rem) {
-    .opening {
-      background-image: url('/images/opening/yard-887.webp');
-    }
-  }
-
-  .opening > .canvas {
-    position: relative;
-  }
-
-  /* The opening's name is planted at the foot of the field above it, surveyed
-     like the nameplate: a label over a slightly-off-level boundary with a
-     stone at each post, not a sign painted on a plank. */
-  .plaque {
-    position: absolute;
-    top: calc(-1 * var(--opening-top) - 0.75rem);
-    translate: 0 -100%;
-    width: fit-content;
-    /* Once the title wraps, the right post still stands inside the margin. */
-    max-width: calc(100% - 2 * var(--pad));
-  }
-
-  .plaque-label {
-    display: block;
-    width: fit-content;
-    font-family: var(--font-display);
-    font-weight: 600;
-    /* Set like the paragraphs beneath it; only the ochre and the boundary mark it as the title. */
-    font-size: var(--fs-opening);
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-    color: var(--accent);
-    text-wrap: balance;
-  }
-
-  .plaque .boundary {
-    margin-top: 0.6rem;
-  }
-
-  .opening > .canvas {
-    width: 100%;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: clamp(3rem, 8vh, 5rem);
-  }
-
-  /* Three paragraphs in one voice, at the size of a section heading:
-     the problem, how it plays out, and the answer in the ground's accent. */
+  /* The problem and the answer, in short paragraphs set like the other ledes. */
   .hook {
-    max-width: 24ch;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--fs-opening);
-    /* Running copy at display size: looser than a headline, tighter than body text. */
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-    overflow-wrap: break-word;
+    max-width: 36rem;
+    font-size: var(--fs-lede);
+    line-height: 1.5;
+    color: var(--fg-soft);
+  }
+
+  .hook + .hook {
+    margin-top: 1em;
+  }
+
+  /* The answer is three short sentences, set a step larger so they carry their plot. */
+  .opening .ground-sage .hook {
+    font-size: var(--fs-statement);
+    line-height: 1.3;
     text-wrap: balance;
   }
 
-  /* Each sentence starts its own line, so no word is left hanging after a full stop. */
-  .hook span {
-    display: block;
-  }
-
-  /* On a wide screen the two statements hold the first screen between them. */
-  @media (min-width: 56rem) {
-    .opening {
-      min-height: min(100svh, 62rem);
-    }
-  }
-
-  .opening-head .hook + .hook {
+  .opening .ground-sage .hook + .hook {
     margin-top: 0.75em;
   }
 
-  .answer {
-    color: var(--accent);
+  /* These two plots hold running text, so they get more air above and below than the makers' plots. */
+  .opening .plot {
+    padding-block: clamp(2.75rem, 5.2vw, 4.5rem);
   }
 
   .jump {
-    margin-top: clamp(2rem, 5vh, 3rem);
+    margin-top: clamp(1.5rem, 3vh, 2.25rem);
   }
 
-  /* The hands reach in from outside the sheet: the drawing is pinned to its right edge
-     and its foot, where the sleeves are cut off. */
-  .opening-art {
-    display: block;
-    align-self: flex-end;
-    width: min(100%, 36rem);
-    height: auto;
-    margin: 2rem 0 calc(-1 * var(--opening-bottom));
+  /* Stacked, the plots share rows of equal height, so the answer stands in the middle of its plot. */
+  .opening .plot.ground-sage {
+    justify-content: center;
   }
 
-  /* On a wide screen the words keep a column of about half the canvas.
-     The wheel fills the room to its right; the drawing's faded left edge may slip under the column,
-     since the wheel itself only starts a fifth of the way in. */
-  @media (min-width: 56rem) {
-    /* Both measures are taken on the sheet (cqw), so the column and the drawing agree on them. */
-    .opening {
-      container-type: inline-size;
-      --fs-opening: clamp(1.5rem, 2.2vw, 2.125rem);
-      --text-w: max(22rem, 0.525 * min(100cqw - 2 * var(--pad), 72rem));
-      --art-x: calc(max(var(--pad), (100cqw - 72rem) / 2) + var(--text-w) + var(--gap));
-    }
-
-    .opening > .canvas {
+  @media (min-width: 52rem) {
+    /* Side by side, the button stands on the plot's floor, level with the last line across the boundary. */
+    .opening .plot.ground-sage {
       justify-content: flex-start;
-      gap: clamp(1.25rem, 3vh, 2rem);
     }
 
-    .opening-head,
-    .opening-body {
-      width: var(--text-w);
-    }
-
-    .opening-head .hook,
-    .opening-body .hook.answer {
-      max-width: none;
-    }
-
-    .opening-art {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      width: calc((100cqw - var(--art-x) - var(--gap)) / 0.8);
-      margin: 0;
+    .opening .jump {
+      margin-top: auto;
+      padding-top: 1.5rem;
     }
   }
 
@@ -663,7 +728,7 @@ const schema = {
   }
 
   .aanpak h2 {
-    font-size: clamp(2rem, 3.8vw, 3.25rem);
+    font-size: var(--fs-title);
     line-height: 1.06;
     letter-spacing: -0.02em;
   }
@@ -964,33 +1029,13 @@ const schema = {
     padding-block: clamp(5rem, 14vh, 9rem) clamp(5rem, 13vh, 8.5rem);
   }
 
+  /* Straight after the plot the paper runs on, so the plot's own margin already opens the section. */
+  .aanpak + .wie {
+    padding-top: clamp(2rem, 5vh, 3.5rem);
+  }
+
   .wie-head h2 {
     text-align: center;
-  }
-
-  /* The conviction closes the plan, set large and centred under the plots it answers for. */
-  .why {
-    margin-top: clamp(3rem, 6vw, 4.5rem);
-    max-width: 46rem;
-    margin-inline: auto;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--fs-statement);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    text-align: center;
-    text-wrap: balance;
-  }
-
-  .why .also {
-    display: block;
-    margin-top: 0.6em;
-    font-style: italic;
-    font-weight: 500;
-    font-size: var(--fs-h3);
-    line-height: 1.3;
-    letter-spacing: 0;
-    color: var(--moss);
   }
 
   .pair {
@@ -1001,6 +1046,10 @@ const schema = {
     font-size: clamp(1.25rem, 2.2vw, 1.75rem);
     line-height: 1.25;
     color: var(--moss);
+    /* Stacked, the sentence sits centred under the heading; from the width where its clauses
+       stand over their own plots, it takes their left edges. */
+    text-align: center;
+    text-wrap: balance;
   }
 
   /* Stacked plots share rows of equal height, so the shared boundary sits on the halfway line. */
@@ -1069,15 +1118,23 @@ const schema = {
     padding: clamp(1.75rem, 3.4vw, 3rem) clamp(1.25rem, 3.4vw, 3rem) clamp(1.25rem, 2.6vw, 2.25rem);
   }
 
+  /* The name stands beside the photo while it has room, and drops under it once a larger
+     text setting leaves too little. */
   .plot-head {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
     gap: clamp(1rem, 2.2vw, 1.75rem);
     margin-bottom: 1.5rem;
   }
 
+  .plot-head > div {
+    flex: 1 1 6.5rem;
+    min-width: 0;
+  }
+
   .plot-photo {
+    flex: none;
     display: block;
     width: clamp(6.5rem, 16vw, 12.5rem);
     height: auto;
@@ -1189,6 +1246,15 @@ const schema = {
     rotate: 0.8deg;
   }
 
+  /* The nest sits over the question it illustrates. It keeps its transparency,
+     so one file stands on the forest of either theme. */
+  .nest {
+    display: block;
+    width: clamp(11rem, 30vw, 20rem);
+    height: auto;
+    margin: 0 auto clamp(1.5rem, 3.4vw, 2.75rem);
+  }
+
   .cta h2 {
     font-size: clamp(2.25rem, 6vw, 4.5rem);
     line-height: 1.02;
@@ -1235,6 +1301,7 @@ const schema = {
     /* The sentence straddles the shared boundary: Anton's half above his plot, Frederik's above his. */
     .pair:not(.pair--three) {
       display: grid;
+      text-align: left;
       grid-template-columns: 1fr 1fr;
       gap: 0 clamp(1.5rem, 3vw, 2.5rem);
     }
@@ -1263,6 +1330,7 @@ const schema = {
   @media (min-width: 64rem) {
     .pair--three {
       display: grid;
+      text-align: left;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
@@ -1285,8 +1353,12 @@ const schema = {
 
     /* The photo stands above the name, so the name keeps the plot's full width. */
     .plan--three .plot-head {
-      grid-template-columns: minmax(0, 1fr);
-      align-items: start;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .plan--three .plot-head > div {
+      flex-basis: auto;
     }
 
     .plan--three .plot-photo {
@@ -1458,10 +1530,6 @@ const schema = {
       display: none;
     }
 
-    .opening {
-      min-height: 0;
-    }
-
     .aanpak-head {
       position: static;
     }
@@ -1491,6 +1559,30 @@ const schema = {
     }
   }
 
+  /* Forced colours paint every background over and drop every shadow, which would erase
+     the surveyed lines and the stones. They take the system's text colour instead. */
+  @media (forced-colors: active) {
+    .boundary::before,
+    .boundary::after,
+    .nameplate::before,
+    .nameplate::after,
+    .invite::before,
+    .invite::after,
+    .step::before,
+    .steps::before {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+
+    .stone,
+    .step::after {
+      forced-color-adjust: none;
+      background: Canvas;
+      box-shadow: none;
+      border: 1.5px solid CanvasText;
+    }
+  }
+
   @keyframes survey {
     from { scale: 0 1; }
     to { scale: 1 1; }
@@ -1501,13 +1593,30 @@ const schema = {
   <main>
 
     <header class="beat hero ground-meadow">
+      <div class="brand">
+        <a class="logo" href="/" aria-label="Gemeen Goed, naar het begin">
+          <svg viewBox="-6 -6 327 85.94" aria-hidden="true" focusable="false">
+            <polygon points="6.3,2.96 188.05,2.22 181.76,72.09 3.15,72.46" fill="#526547"/>
+            <polygon points="188.05,2.22 308.7,1.48 311.85,71.72 181.76,72.09" fill="#FFFFFF"/>
+            <polygon points="6.3,2.96 308.7,1.48 311.85,71.72 3.15,72.46" fill="none" stroke="#5E6E37" stroke-width="1.5" stroke-linejoin="round"/>
+            <line x1="188.05" y1="2.22" x2="181.76" y2="72.09" stroke="#5E6E37" stroke-width="1.5"/>
+            <g fill="#F1ECDD" stroke="#5E6E37" stroke-width="1.5">
+              <circle cx="6.3" cy="2.96" r="3.75"/><circle cx="188.05" cy="2.22" r="3.75"/><circle cx="308.7" cy="1.48" r="3.75"/>
+              <circle cx="3.15" cy="72.46" r="3.75"/><circle cx="181.76" cy="72.09" r="3.75"/><circle cx="311.85" cy="71.72" r="3.75"/>
+            </g>
+            <text class="logo-sans" x="91.67" y="49.11" text-anchor="middle" font-size="33.58" letter-spacing="-0.672" fill="#FFFFFF">Gemeen</text>
+            <text class="logo-serif" x="249.17" y="49.11" text-anchor="middle" font-size="34.82" letter-spacing="-1.045" fill="#526547">Goed</text>
+          </svg>
+        </a>
+        <p class="brand-line">Sociale softwarestudio</p>
+      </div>
       <div class="hero-copy">
         <div class="nameplate">
-          <h1><span>Software hoort</span> <em>Gemeen Goed</em> <span>te zijn.</span></h1>
+          <h1><span>Wie de wereld beter maakt,</span> <span>verdient goede&nbsp;software.</span></h1>
           <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
         </div>
         <div class="hero-how">
-          <p>Met onze softwarestudio brengen we sociale organisaties met hetzelfde probleem samen rond één softwarepakket. We bedenken het samen, wij bouwen en onderhouden, en de prijs volgt wat je kan dragen.</p>
+          <p>We brengen sociale organisaties samen en bouwen de software die ze elk apart niet betaald&nbsp;krijgen.</p>
         </div>
       </div>
       <div class="hero-art">
@@ -1525,36 +1634,51 @@ const schema = {
       </div>
     </header>
 
-    <section class="beat opening ground-grove" aria-labelledby="haak">
+    <section class="beat opening ground-grove" aria-label="Het probleem en ons antwoord">
       <div class="canvas">
-        <div class="plaque">
-          <h2 class="plaque-label" id="haak">Wat je samen doet, doe je beter</h2>
-          <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
-        </div>
-        <div class="opening-head">
-          <p class="hook">Vandaag betaalt elke organisatie apart voor hetzelfde wiel.</p>
-          <p class="hook">De groten laten dure software op maat maken. De rest behelpt zich met pakketten die voor iemand anders gemaakt zijn, of haalt acrobatentoeren uit met Excel.</p>
-          <p class="hook">Dat is verspilling van tijd en geld. Werk je samen, dan bereik je zoveel meer.</p>
-        </div>
-        <div class="opening-body">
-          <p class="hook answer"><span>Dus bouwt Gemeen Goed dat wiel één keer, samen met de hele sector.</span> <span>Software die past bij jullie werk, aan een prijs die jullie kunnen dragen.</span></p>
-          <p class="jump">
-            <a class="btn" href="#contact">Praat met ons
-              <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg>
-            </a>
-          </p>
+        <div class="plan">
+          <svg class="parcels plan-drawing--wide" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <polygon class="plot-a" points="0,18 492,9 508,992.5 8,985" />
+            <polygon class="plot-b" points="492,9 1000,0 994,1000 508,992.5" />
+            <path d="M-21,18.38 L1021,-0.38" />
+            <path d="M-13,984.68 L1015,1000.32" />
+            <path d="M-0.38,-28 L8.38,1031" />
+            <path d="M1000.28,-46 L993.72,1046" />
+            <path class="shared" d="M492,9 L508,992.5" />
+          </svg>
+          <svg class="parcels plan-drawing--tall" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <polygon class="plot-a" points="0,6 1000,0 995,505 6,497" />
+            <polygon class="plot-b" points="6,497 995,505 990,1000 12,994" />
+            <path d="M-50,6.3 L1050,-0.3" />
+            <path d="M-38,993.69 L1040,1000.31" />
+            <path d="M-0.19,-10 L12.19,1010" />
+            <path d="M1000.16,-16 L989.84,1016" />
+            <path class="shared" d="M6,497 L995,505" />
+          </svg>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <span class="stone" aria-hidden="true"></span>
+          <div class="plot ground-sheet">
+            <h2>Software voor sociale organisaties hoort <em>Gemeen&nbsp;Goed</em> te&nbsp;zijn.</h2>
+            <p class="hook">Vandaag lost iedereen het apart&nbsp;op.</p>
+            <p class="hook">De groten laten dure software op maat maken. De rest behelpt zich met pakketten die voor iemand anders gemaakt zijn, of haalt acrobatentoeren uit met Excel.</p>
+            <p class="hook">Zo betaalt elke organisatie opnieuw voor hetzelfde&nbsp;wiel.</p>
+          </div>
+          <div class="plot ground-sage">
+            <p class="hook">Gemeen Goed lost het één keer op, samen met de organisaties die met hetzelfde probleem&nbsp;zitten.</p>
+            <p class="hook">We bouwen de software en blijven ze&nbsp;onderhouden.</p>
+            <p class="hook">Aan een prijs waarbij iedereen mee&nbsp;kan&nbsp;doen.</p>
+            <p class="jump">
+              <a class="btn btn--quiet" href="#contact">Praat met ons
+                <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg>
+              </a>
+            </p>
+          </div>
         </div>
       </div>
-      <img
-        class="opening-art"
-        src="/images/opening/hands-1536.webp"
-        srcset="/images/opening/hands-768.webp 768w, /images/opening/hands-1536.webp 1536w"
-        sizes="(min-width: 56rem) 60vw, min(100vw, 36rem)"
-        width="1536"
-        height="1024"
-        alt="Handen van verschillende mensen houden samen één houten wagenwiel vast."
-        loading="lazy"
-      >
     </section>
 
     <section class="beat aanpak ground-paper" aria-labelledby="aanpak">
@@ -1734,7 +1858,7 @@ const schema = {
                 <p class="plot-role">Partnerschappen &amp; support</p>
               </div>
             </div>
-            <p class="plot-bio">Houdt niet zo van computers, wel van mensen bijeenbrengen. Verenigde 200 lokale besturen rond Opvang.Vlaanderen. Kent de publieke en sociale sector van binnenuit. Is er trots op dat wie een vraag heeft, snel antwoord krijgt.</p>
+            <p class="plot-bio">Houdt niet zo van computers, wel van mensen bijeenbrengen. Verenigde 200 lokale besturen rond <a href="https://opvang.vlaanderen" rel="noopener">Opvang.Vlaanderen</a>. Kent de publieke en sociale sector van binnenuit. Is er trots op dat wie een vraag heeft, snel antwoord krijgt.</p>
             <ul class="plot-links">
               <li class="plot-links-mail"><a class="plot-mail" href="mailto:anton@gemeengoed.studio">anton@gemeengoed.studio</a></li>
               <li><a class="plot-secondary" href="https://www.linkedin.com/in/antonaerts/" rel="noopener">LinkedIn<span class="visually-hidden"> van Anton Aerts</span></a></li>
@@ -1749,9 +1873,9 @@ const schema = {
               </div>
             </div>
             {metNico ? (
-            <p class="plot-bio">Ontwerpt samen met wie de software straks gebruikt. Zit aan tafel met huizen en sociale organisaties tot hun noden helder zijn, en giet die in een product. Medeoprichter van Prezly, bouwer van Hartverwarmers. Kan er slecht tegen dat iemand vol goeie bedoelingen wordt tegengehouden door slechte tools.</p>
+            <p class="plot-bio">Ontwerpt samen met wie de software straks gebruikt. Zit aan tafel met huizen en sociale organisaties tot hun noden helder zijn, en giet die in een product. Medeoprichter van <a href="https://www.prezly.com" rel="noopener">Prezly</a>, bouwer van <a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a>. Kan er slecht tegen dat iemand vol goeie bedoelingen wordt tegengehouden door slechte tools.</p>
             ) : (
-            <p class="plot-bio">Ontwerpt en programmeert. Medeoprichter van Prezly, bouwer van Hartverwarmers. Sinds 2016 alleen nog voor sociale organisaties. Kan er slecht tegen dat iemand vol goeie bedoelingen wordt tegengehouden door slechte tools.</p>
+            <p class="plot-bio">Ontwerpt en programmeert. Medeoprichter van <a href="https://www.prezly.com" rel="noopener">Prezly</a>, bouwer van <a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a>. Sinds 2016 alleen nog voor sociale organisaties. Kan er slecht tegen dat iemand vol goeie bedoelingen wordt tegengehouden door slechte tools.</p>
             )}
             <ul class="plot-links">
               <li class="plot-links-mail"><a class="plot-mail" href="mailto:frederik@gemeengoed.studio">frederik@gemeengoed.studio</a></li>
@@ -1768,7 +1892,7 @@ const schema = {
                 <p class="plot-role">Techniek &amp; architectuur</p>
               </div>
             </div>
-            <p class="plot-bio">Bouwt software die jaren meegaat: solide, veilig, en de data blijft van de klant. Bouwde Schoolpodium samen met de culturele centra en houdt het sinds 2018 draaiende. Gaf les in moderne webontwikkeling. Neemt op als je belt.</p>
+            <p class="plot-bio">Bouwt software die jaren meegaat: solide, veilig, en de data blijft van de klant. Bouwde <a href="https://schoolpodium.be" rel="noopener">Schoolpodium</a> samen met de culturele centra en houdt het sinds 2018 draaiende. Gaf les in moderne webontwikkeling. Neemt op als je belt.</p>
             <ul class="plot-links">
               <li class="plot-links-mail"><a class="plot-mail" href="mailto:nico@gemeengoed.studio">nico@gemeengoed.studio</a></li>
               <li><a class="plot-secondary" href="https://www.linkedin.com/in/nicodeblauwe/" rel="noopener">LinkedIn<span class="visually-hidden"> van Nico Deblauwe</span></a></li>
@@ -1777,15 +1901,25 @@ const schema = {
           </div>
           )}
         </div>
-        <p class="why">We doen dit omdat het niet normaal is dat wie het belangrijkste werk doet, de slechtste tools krijgt. <span class="also">Wie de wereld beter maakt, hoort dat niet alleen te doen.</span></p>
       </div>
     </section>
 
     <section class="beat cta ground-forest" id="contact" aria-labelledby="broeden">
       <div class="canvas">
         <div class="invite">
-          <h2 id="broeden"><span>Iets aan het broeden</span> <span>in jouw sector?</span></h2>
-          <p class="cta-say">Werk je bij een sociale organisatie en bots je op software die nét niet past? Grote kans dat je niet de enige bent. Daar liggen wij wakker van. We luisteren graag mee.</p>
+          <img
+            class="nest"
+            src="/images/cta/nest-640.webp"
+            srcset="/images/cta/nest-320.webp 320w, /images/cta/nest-640.webp 640w"
+            sizes="(min-width: 67rem) 20rem, max(11rem, 30vw)"
+            width="640"
+            height="368"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          >
+          <h2 id="broeden"><span>Zit jouw sector</span> <span>met een ei?</span></h2>
+          <p class="cta-say">Zie je in jouw sector een duidelijk gat in de software, iets waar gelijkaardige organisaties ook tegenaan lopen? Dan is er misschien een kans om de krachten te bundelen. Mail ons, ook als het nog maar een vermoeden is.</p>
           <a class="btn btn--face" href="mailto:anton@gemeengoed.studio">
             <img class="btn-face" src="/images/anton-400.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
             <span>Mail Anton</span>
