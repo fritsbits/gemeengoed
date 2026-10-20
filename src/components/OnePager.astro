@@ -523,8 +523,9 @@ const schema = {
       max-width: none;
     }
 
-    /* Each clause stands on one line. It is longer than the column, so it runs on over the drawing's sky. */
+    /* The title is set one clause to the line. Narrower than this it flows, evenly, as one. */
     .hero h1 > * {
+      display: block;
       white-space: nowrap;
     }
 
@@ -608,11 +609,6 @@ const schema = {
     font-size: var(--fs-title);
     line-height: 0.98;
     letter-spacing: -0.02em;
-  }
-
-  /* The title is set one clause to the line. A clause wraps, evenly, where the column is too narrow for it. */
-  .hero h1 > * {
-    display: block;
   }
 
   .hero .boundary {
@@ -1661,7 +1657,7 @@ const schema = {
       </div>
       <div class="hero-copy">
         <div class="nameplate">
-          <h1><span>Wie de wereld beter maakt,</span> <span>verdient goede&nbsp;software.</span></h1>
+          <h1><span>Samen maken we</span> <span>schone software</span> <span>voor waardevol werk</span></h1>
           <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
         </div>
         <div class="hero-how">
