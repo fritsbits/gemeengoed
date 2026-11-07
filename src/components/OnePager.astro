@@ -833,6 +833,8 @@ const schema = {
 
   .werk {
     --edge: max(var(--pad), (100% - 72rem) / 2);
+    /* How far the quote's plot is laid over the case it belongs to. */
+    --overlap: 1.75rem;
     padding-block: clamp(4.5rem, 12vh, 8rem);
   }
 
@@ -906,6 +908,19 @@ const schema = {
 
   .case--lead { --w: 38.75rem; --h: 37.5rem; }
   .case--quote { --w: 28rem; --h: 25rem; }
+
+  /* The quote is laid over the corner of its case, like a plot on top of a plot.
+     The case keeps that corner free of text. */
+  .case--quote {
+    position: relative;
+    z-index: 1;
+    align-self: flex-end;
+    margin-left: calc(-1 * var(--overlap));
+  }
+
+  .case:has(+ .case--quote) {
+    padding-right: calc(clamp(1.5rem, 3.5vw, 3rem) + var(--overlap));
+  }
   .case--mid { --w: 32.5rem; --h: 32.5rem; }
   .case--small { --w: 28.75rem; --h: 28rem; }
   .case--next { --w: 30rem; --h: 31rem; }
@@ -1555,6 +1570,10 @@ const schema = {
 
     .case {
       min-height: var(--h);
+    }
+
+    .werk {
+      --overlap: 7.5rem;
     }
 
     .cta h2 span {
