@@ -1770,8 +1770,6 @@ const schema = {
       </div>
     </section>
 
-    {/* Publiek verborgen tot 1 november: Anton zit nog onder een non-compete. Daarna mag dit blok voor iedereen. */}
-    {metNico && (
     <section class="beat werk ground-alt" aria-labelledby="werk">
       <div class="canvas">
         <div class="grid werk-head">
@@ -1792,6 +1790,8 @@ const schema = {
               <footer>Uit de gebruikersraad. Zo klinkt gemeengoed.</footer>
             </blockquote>
           </li>
+          {/* Schoolpodium is Nico's werk: enkel tonen in de variant waar Nico mee aan tafel zit. */}
+          {metNico && (
           <li class="work work--flagship">
             <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2018</span></p>
             <div class="work-main">
@@ -1805,6 +1805,7 @@ const schema = {
               <footer>Een schoolprogrammator. Zo klinkt gemeengoed.</footer>
             </blockquote>
           </li>
+          )}
           <li class="work work--mid">
             <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2020</span></p>
             <div class="work-main">
@@ -1832,7 +1833,6 @@ const schema = {
         </ul>
       </div>
     </section>
-    )}
 
     <section class="beat wie ground-paper" aria-labelledby="wie">
       <div class="canvas">
