@@ -804,7 +804,6 @@ const schema = {
 
   /* The order is the message, so the numerals are figures, not bullets. */
   .step-n,
-  .when-year,
   .fig {
     font-family: var(--font-display);
     font-weight: 600;
@@ -861,15 +860,48 @@ const schema = {
     color: var(--fg-soft);
   }
 
-  .when-word,
-  .when-year {
+  /* What the work carries leads: the figure takes the display size, its noun sits under it. */
+  .impact .fig,
+  .impact .fig-label {
     display: block;
   }
 
-  .when-year {
+  .fig {
     letter-spacing: -0.035em;
     line-height: 0.9;
     color: var(--accent);
+  }
+
+  .fig-label {
+    margin-top: 0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-lede);
+    line-height: 1.25;
+    color: var(--fg);
+    max-width: 14rem;
+    text-wrap: balance;
+  }
+
+  /* Time is told as a state, not a date: the work is still running. */
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.625rem;
+    font-size: var(--fs-small);
+    letter-spacing: 0.01em;
+    color: var(--fg-soft);
+  }
+
+  .status::before {
+    content: "";
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--moss);
+    box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--moss) 22%, transparent);
   }
 
   .work h3 {
@@ -891,13 +923,9 @@ const schema = {
     max-width: 38rem;
   }
 
-  /* Figures read as figures: the number takes the display size, the sentence follows it. */
-  .fact {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.25rem 1rem;
-    margin-top: 1.5rem;
+  /* The sentence that rounds off a case, set like the figure's label. */
+  .work-note {
+    margin-top: 1rem;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--fs-lede);
@@ -905,28 +933,14 @@ const schema = {
     color: var(--fg);
   }
 
-  .fig {
-    letter-spacing: -0.03em;
-    line-height: 0.9;
-  }
-
-  .fact-text {
-    flex: 1 1 12rem;
-  }
-
-  .work--flagship .when-year { font-size: var(--fs-year); }
+  .work--flagship .fig { font-size: var(--fs-year); }
   .work--flagship h3 { font-size: clamp(1.625rem, 7vw, 2.75rem); }
-  .work--flagship .fig { font-size: clamp(3.25rem, 7vw, 5.5rem); }
-  .work--flagship .when { margin-bottom: 1.25rem; }
+  .work--flagship .impact { margin-bottom: 1.75rem; }
 
-  .work--mid .when-year { font-size: clamp(3rem, 6vw, 4.5rem); }
+  .work--mid .fig { font-size: clamp(3rem, 6vw, 4.5rem); }
   .work--mid h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
-  .work--mid .fig { font-size: clamp(2.25rem, 4vw, 3.25rem); }
-  .work--mid .when { margin-bottom: 1rem; }
-
-  .work--background .when-year { font-size: 2.25rem; }
-  .work--background .when { margin-bottom: 0.75rem; }
-  .work--background .fact { font-size: var(--fs-body); margin-top: 0.875rem; }
+  .work--mid .fig-label { font-size: var(--fs-body); }
+  .work--mid .impact { margin-bottom: 1.25rem; }
 
   /* The user council's sentence gets a ground of its own, across the whole sheet. */
   .quote {
@@ -1442,13 +1456,17 @@ const schema = {
       column-gap: var(--gap);
     }
 
-    .work--flagship .when {
+    .work--flagship .impact {
       grid-column: 1 / span 4;
     }
 
     .work--flagship .work-main {
       grid-column: 5 / -1;
-      padding-top: 0.75rem;
+      padding-top: 0.5rem;
+    }
+
+    .work--flagship .impact {
+      margin-bottom: 0;
     }
 
     .work--flagship .quote {
@@ -1462,8 +1480,9 @@ const schema = {
       column-gap: var(--gap);
     }
 
-    .work--mid .when {
+    .work--mid .impact {
       grid-column: 1 / span 3;
+      margin-bottom: 0;
     }
 
     .work--mid .work-main {
@@ -1779,11 +1798,12 @@ const schema = {
         <div class="boundary" aria-hidden="true"></div>
         <ul class="grid works">
           <li class="work work--flagship">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2019</span></p>
+            <p class="impact"><span class="fig">200</span> <span class="fig-label">lokale besturen</span></p>
             <div class="work-main">
+              <p class="status">Draait sinds 2019</p>
               <h3><a href="https://opvang.vlaanderen" rel="noopener">Opvang.Vlaanderen</a></h3>
               <p class="work-text">Alleen de grote steden konden zich een eigen systeem voor kinderopvang veroorloven. Kleine besturen deden het met formuliertjes en Excel. Anton bracht ze samen rond één platform, in een model waar de breedste schouders de grootste last dragen.</p>
-              <p class="fact"><span class="fig">200</span> <span class="fact-text">lokale besturen. Een gebruikersraad beslist mee.</span></p>
+              <p class="work-note">Een gebruikersraad beslist mee.</p>
             </div>
             <blockquote class="quote">
               <p><span class="q-open">Opvang Vlaanderen is van ons,</span> <span class="q-close">niet van jullie.</span></p>
@@ -1793,11 +1813,12 @@ const schema = {
           {/* Schoolpodium is Nico's werk: enkel tonen in de variant waar Nico mee aan tafel zit. */}
           {metNico && (
           <li class="work work--flagship">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2018</span></p>
+            <p class="impact"><span class="fig">26</span> <span class="fig-label">culturele centra</span></p>
             <div class="work-main">
+              <p class="status">Draait sinds 2018</p>
               <h3><a href="https://schoolpodium.be" rel="noopener">Schoolpodium</a></h3>
               <p class="work-text">Schoolprogrammatoren van culturele centra plannen er hun schoolvoorstellingen, volgen inschrijvingen van leerkrachten op en sturen evaluaties. Nico bouwde het samen met de centra en onderhoudt het sindsdien als een goede huisvader.</p>
-              <p class="fact"><span class="fig">26</span> <span class="fact-text">culturele centra, samen 1.140 schoolactiviteiten dit schooljaar.</span></p>
+              <p class="work-note">Samen 1.140 schoolactiviteiten dit schooljaar.</p>
             </div>
             {/* Placeholder: verzonnen citaat. Vervang door een echte uitspraak voor dit publiek gaat. */}
             <blockquote class="quote">
@@ -1807,19 +1828,18 @@ const schema = {
           </li>
           )}
           <li class="work work--mid">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2020</span></p>
+            <p class="impact"><span class="fig">2.200</span> <span class="fig-label">actieve gebruikers per maand</span></p>
             <div class="work-main">
+              <p class="status">Draait sinds 2020</p>
               <h3><a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a></h3>
               <p class="work-text">Gelanceerd in de eerste dagen van covid voor de woonzorgsector. Uitgegroeid tot een inspiratiebron voor animatoren, met een boek erbij.</p>
-              <p class="fact"><span class="fig">2.200</span> <span class="fact-text">actieve gebruikers per maand.</span></p>
             </div>
           </li>
           <li class="work work--background">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2009</span></p>
             <div class="work-main">
+              <p class="status">Draait nog</p>
               <h3><a href="https://www.prezly.com" rel="noopener">Prezly</a></h3>
               <p class="work-text">Communicatiesoftware die Frederik mee oprichtte. Geen sociale sector, wel de plek waar hij leerde een product uit te bouwen dat honderden organisaties elke dag gebruiken.</p>
-              <p class="fact">Draait vandaag nog.</p>
             </div>
           </li>
           <li class="work work--next">
