@@ -804,7 +804,6 @@ const schema = {
 
   /* The order is the message, so the numerals are figures, not bullets. */
   .step-n,
-  .when-year,
   .fig {
     font-family: var(--font-display);
     font-weight: 600;
@@ -830,9 +829,14 @@ const schema = {
     max-width: 36rem;
   }
 
-  /* ---------- 4. Werk: the proof, ranked ---------- */
+  /* ---------- 4. Werk: the proof, as plots in a row that runs off the sheet ---------- */
 
   .werk {
+    --edge: max(var(--pad), (100% - 72rem) / 2);
+    /* How far the quote's plot is laid over the case it belongs to. */
+    --overlap: 1.75rem;
+    /* The strip of ground between two plots. */
+    --plot-gap: clamp(1.125rem, 2.2vw, 2rem);
     padding-block: clamp(4.5rem, 12vh, 8rem);
   }
 
@@ -851,192 +855,323 @@ const schema = {
     max-width: 26rem;
   }
 
-  .werk .boundary {
-    margin-block: clamp(2rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4.5rem);
+  /* The row scrolls on its own and starts on the canvas edge, so the plots run off the
+     right side of the sheet and the next one always peeks in. */
+  .cases {
+    position: relative;
+    display: flex;
+    /* On a phone one plot fills the view, so they share a height and nothing jumps. */
+    align-items: stretch;
+    gap: var(--plot-gap);
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding-inline: var(--edge);
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
   }
 
-  .when {
+  /* With the buttons and stones working, the scrollbar is only clutter. Without them it stays. */
+  .cases.is-enhanced {
+    scrollbar-width: none;
+  }
+
+  .cases.is-enhanced::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cases:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+
+  /* Each plot sets its own width and height, so the row reads as varied land, not a deck of cards. */
+  .case {
+    --w: 28rem;
+    --h: 28rem;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    width: min(var(--w), 100vw - 2 * var(--pad) - var(--plot-gap) - 2rem);
+    min-height: calc(var(--h) * 0.72);
+    padding: clamp(1.5rem, 3.5vw, 3rem);
+    background: var(--bg);
+    color: var(--fg);
+    clip-path: var(--plot-cut, polygon(0 0.8%, 100% 0, 99.4% 100%, 0 100%));
+    scroll-snap-align: start;
+  }
+
+  .case:nth-child(even) {
+    --plot-cut: polygon(0 0, 100% 1.4%, 100% 100%, 0.4% 100%);
+  }
+
+  .case--lead { --w: 38.75rem; --h: 37.5rem; }
+  .case--quote { --w: 28rem; --h: 25rem; }
+
+  /* The quote is laid over the corner of its case, like a plot on top of a plot.
+     The case keeps that corner free of text. */
+  .case--quote {
+    position: relative;
+    z-index: 1;
+    align-self: flex-end;
+    margin-left: calc(-1 * (var(--overlap) + var(--plot-gap)));
+  }
+
+  .case:has(+ .case--quote) {
+    padding-right: calc(clamp(1.5rem, 3.5vw, 3rem) + var(--overlap));
+  }
+  .case--mid { --w: 32.5rem; --h: 32.5rem; }
+  .case--small { --w: 28.75rem; --h: 28rem; }
+  .case--next { --w: 30rem; --h: 31rem; }
+
+  .case-when {
+    margin-bottom: 0.75rem;
     font-size: var(--fs-small);
     letter-spacing: 0.01em;
     color: var(--fg-soft);
   }
 
-  .when-word,
-  .when-year {
-    display: block;
+  .case h3 {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
   }
 
-  .when-year {
-    letter-spacing: -0.035em;
-    line-height: 0.9;
-    color: var(--accent);
-  }
-
-  .work h3 {
-    font-size: var(--fs-h3);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+  .case--lead h3 {
+    font-size: clamp(1.625rem, 3.6vw, 3rem);
   }
 
   /* A taller hit area for the product links without moving the heading. */
-  .work h3 a {
+  .case h3 a {
     display: inline-block;
     padding-block: 0.4rem;
     margin-block: -0.4rem;
   }
 
-  .work-text {
-    margin-top: 0.75rem;
+  .case-text {
+    margin-top: 1rem;
     color: var(--fg-soft);
-    max-width: 38rem;
+    max-width: 34rem;
   }
 
-  /* Figures read as figures: the number takes the display size, the sentence follows it. */
-  .fact {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.25rem 1rem;
-    margin-top: 1.5rem;
+  .case-note {
+    margin-top: 1rem;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: var(--fs-lede);
     line-height: 1.3;
-    color: var(--fg);
+  }
+
+  /* What the work carries: the figure in the plot's accent, its noun beside it. */
+  .case-impact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1.125rem;
   }
 
   .fig {
-    letter-spacing: -0.03em;
-    line-height: 0.9;
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+    color: var(--accent);
   }
 
-  .fact-text {
-    flex: 1 1 12rem;
+  .case .fig {
+    font-size: clamp(4rem, 8vw, 5rem);
   }
 
-  .work--flagship .when-year { font-size: var(--fs-year); }
-  .work--flagship h3 { font-size: clamp(1.625rem, 7vw, 2.75rem); }
-  .work--flagship .fig { font-size: clamp(3.25rem, 7vw, 5.5rem); }
-  .work--flagship .when { margin-bottom: 1.25rem; }
-
-  .work--mid .when-year { font-size: clamp(3rem, 6vw, 4.5rem); }
-  .work--mid h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
-  .work--mid .fig { font-size: clamp(2.25rem, 4vw, 3.25rem); }
-  .work--mid .when { margin-bottom: 1rem; }
-
-  .work--background .when-year { font-size: 2.25rem; }
-  .work--background .when { margin-bottom: 0.75rem; }
-  .work--background .fact { font-size: var(--fs-body); margin-top: 0.875rem; }
-
-  /* The user council's sentence gets a ground of its own, across the whole sheet. */
-  .quote {
-    position: relative;
-    margin: clamp(3rem, 7vw, 5rem) 0 0;
-    padding-block: clamp(3rem, 8vw, 6rem);
-    background: var(--band);
-    color: var(--on-deep);
+  .case--lead .fig {
+    font-size: clamp(5rem, 10vw, 8rem);
   }
 
-  .quote::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset-block: 0;
-    left: 50%;
-    width: 100vw;
-    translate: -50% 0;
-    background: var(--band);
+  .fig-label {
+    flex: 1 1 9rem;
+    max-width: 13rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-lede);
+    line-height: 1.25;
+    text-wrap: balance;
   }
 
-  .quote ::selection {
-    background: var(--on-deep);
-    color: var(--band);
+  /* The user council's sentence gets a plot of its own. */
+  .case--quote figure {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin: 0;
   }
 
-  .quote p {
+  .case--quote blockquote {
+    margin: 0;
+  }
+
+  .case--quote blockquote p {
     quotes: '\201C' '\201D';
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 500;
-    font-size: clamp(1.875rem, 5.6vw, 4.75rem);
-    line-height: 1.06;
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+    line-height: 1.08;
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
-  .quote .q-open {
-    position: relative;
-  }
+  .case--quote blockquote p::before { content: open-quote; }
+  .case--quote blockquote p::after { content: close-quote; }
 
-  /* The opening mark hangs in the margin so the words keep the left edge. */
-  .quote .q-open::before {
-    content: open-quote;
-    position: absolute;
-    right: 100%;
-    margin-right: 0.04em;
-  }
-
-  .quote .q-close::after {
-    content: close-quote;
-  }
-
-  /* Two sentences: where they wrap, each takes its own line. */
-  .quote footer {
+  .case--quote figcaption {
     display: flex;
     align-items: flex-start;
     gap: 0.875rem;
-    margin-top: clamp(1.25rem, 3vw, 2rem);
-    font-size: var(--fs-body);
+    font-size: var(--fs-small);
+    line-height: 1.5;
     text-wrap: balance;
   }
 
   /* The rule sits on the middle of the first line, however many lines follow. */
-  .quote footer::before {
+  .case--quote figcaption::before {
     content: "";
     flex: none;
-    width: 2.5rem;
+    width: 2rem;
     height: 1px;
-    margin-top: 0.8em;
+    margin-top: 0.75em;
     background: currentColor;
   }
 
-  .works > .work + .work {
-    margin-top: clamp(3rem, 7vw, 4.5rem);
+  .case--quote ::selection {
+    background: var(--fg);
+    color: var(--bg);
   }
 
   /* Not built yet, so its boundary is pegged out, not drawn. */
-  .work--next {
+  .case--next {
     position: relative;
     isolation: isolate;
-    padding: clamp(1.5rem, 4vw, 3rem);
+    justify-content: flex-start;
+    gap: 0;
+    background: none;
+    clip-path: none;
   }
 
-  .work--next .parcels {
+  .case--next .parcels {
     inset: 0;
     width: 100%;
     height: 100%;
     overflow: visible;
   }
 
-  .work--next .parcels path {
+  .case--next .parcels path {
     stroke: var(--moss);
     stroke-width: 1.25;
     stroke-dasharray: 7 6;
   }
 
-  .work--next .when {
+  .case-soon {
+    margin-bottom: 1rem;
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 500;
-    font-size: clamp(1.625rem, 3.2vw, 2.25rem);
-    line-height: 1.1;
+    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+    line-height: 1.05;
     letter-spacing: -0.01em;
     color: var(--moss);
-    margin-bottom: 1rem;
   }
 
-  .work--next h3 {
-    font-size: clamp(1.5rem, 3vw, 2rem);
+  .case--next h3 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+  }
+
+  /* Under the row: the boundary the plots stand on, the stones that tell where you are,
+     and the two buttons. */
+  .werk .boundary {
+    margin-top: 0;
+    rotate: 0.2deg;
+  }
+
+  .cases-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 1.75rem;
+  }
+
+  .cases-controls[hidden] {
+    display: none;
+  }
+
+  .cases-stones {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .cases-stones span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 0 0 1.5px var(--fg);
+  }
+
+  .cases-stones span[data-current] {
+    background: var(--accent);
+    box-shadow: inset 0 0 0 1.5px var(--accent);
+  }
+
+  .cases-buttons {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .cases-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 1.5px solid var(--fg);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--fg);
+    cursor: pointer;
+  }
+
+  .cases-btn--next {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .cases-btn:hover:not(:disabled) {
+    border-color: var(--moss);
+    background: var(--moss);
+    color: var(--paper);
+  }
+
+  .cases-btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .cases-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .cases-btn:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .cases-btn svg {
+    width: 1.125rem;
+    height: 1.125rem;
   }
 
   /* ---------- 5. Wie: a drawn plan of two adjoining plots ---------- */
@@ -1430,58 +1565,17 @@ const schema = {
       padding-bottom: 0.5rem;
     }
 
-    .works > .work {
-      grid-column: 1 / -1;
+    /* Wide enough to stand the plots on the boundary at their own heights. */
+    .cases {
+      align-items: flex-end;
     }
 
-    /* Each ranked entry repeats the sheet's own columns, so its parts land on them. */
-    .work--flagship,
-    .works > .work--next {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--gap);
+    .case {
+      min-height: var(--h);
     }
 
-    .work--flagship .when {
-      grid-column: 1 / span 4;
-    }
-
-    .work--flagship .work-main {
-      grid-column: 5 / -1;
-      padding-top: 0.75rem;
-    }
-
-    .work--flagship .quote {
-      grid-column: 1 / -1;
-    }
-
-    .works > .work--mid {
-      grid-column: 1 / span 7;
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      column-gap: var(--gap);
-    }
-
-    .work--mid .when {
-      grid-column: 1 / span 3;
-    }
-
-    .work--mid .work-main {
-      grid-column: 4 / -1;
-      padding-top: 0.5rem;
-    }
-
-    .works > .work--background {
-      grid-column: 9 / -1;
-    }
-
-    .work--next .when {
-      grid-column: 1 / span 4;
-      margin-bottom: 0;
-    }
-
-    .work--next .work-main {
-      grid-column: 5 / -1;
+    .werk {
+      --overlap: 7.5rem;
     }
 
     .cta h2 span {
@@ -1525,23 +1619,11 @@ const schema = {
     }
   }
 
-  /* Wide enough for the quote to hold its lines. */
-  @media (min-width: 80rem) {
-    .quote p span {
-      display: block;
-    }
-
-    .quote {
-      padding-inline: calc((100% - 11 * var(--gap)) / 12 + var(--gap)) 0;
-    }
-  }
-
   @media print {
     .beat,
     .aanpak-ground,
     .colophon,
-    .quote,
-    .quote::before {
+    .case {
       background: #fff;
       color: #000;
     }
@@ -1567,6 +1649,21 @@ const schema = {
 
     .aanpak-head {
       position: static;
+    }
+
+    .cases {
+      flex-wrap: wrap;
+      overflow: visible;
+      padding-inline: var(--pad);
+    }
+
+    .case {
+      clip-path: none;
+      border: 1px solid #000;
+    }
+
+    .cases-controls {
+      display: none;
     }
 
     .btn,
@@ -1770,69 +1867,87 @@ const schema = {
       </div>
     </section>
 
-    {/* Publiek verborgen tot 1 november: Anton zit nog onder een non-compete. Daarna mag dit blok voor iedereen. */}
-    {metNico && (
     <section class="beat werk ground-alt" aria-labelledby="werk">
       <div class="canvas">
         <div class="grid werk-head">
           <h2 id="werk">Wij bouwden dit al</h2>
-          <p class="lede">Producten die we van nul opbouwden. Ze draaien vandaag nog altijd.</p>
+          <p class="lede">Elk voor een andere sector, van nul opgebouwd. Ze draaien vandaag nog altijd.</p>
         </div>
-        <div class="boundary" aria-hidden="true"></div>
-        <ul class="grid works">
-          <li class="work work--flagship">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2019</span></p>
-            <div class="work-main">
-              <h3><a href="https://opvang.vlaanderen" rel="noopener">Opvang.Vlaanderen</a></h3>
-              <p class="work-text">Alleen de grote steden konden zich een eigen systeem voor kinderopvang veroorloven. Kleine besturen deden het met formuliertjes en Excel. Anton bracht ze samen rond één platform, in een model waar de breedste schouders de grootste last dragen.</p>
-              <p class="fact"><span class="fig">200</span> <span class="fact-text">lokale besturen. Een gebruikersraad beslist mee.</span></p>
-            </div>
-            <blockquote class="quote">
-              <p><span class="q-open">Opvang Vlaanderen is van ons,</span> <span class="q-close">niet van jullie.</span></p>
-              <footer>Uit de gebruikersraad. Zo klinkt gemeengoed.</footer>
-            </blockquote>
-          </li>
-          <li class="work work--flagship">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2018</span></p>
-            <div class="work-main">
-              <h3><a href="https://schoolpodium.be" rel="noopener">Schoolpodium</a></h3>
-              <p class="work-text">Schoolprogrammatoren van culturele centra plannen er hun schoolvoorstellingen, volgen inschrijvingen van leerkrachten op en sturen evaluaties. Nico bouwde het samen met de centra en onderhoudt het sindsdien als een goede huisvader.</p>
-              <p class="fact"><span class="fig">26</span> <span class="fact-text">culturele centra, samen 1.140 schoolactiviteiten dit schooljaar.</span></p>
-            </div>
-            {/* Placeholder: verzonnen citaat. Vervang door een echte uitspraak voor dit publiek gaat. */}
-            <blockquote class="quote">
-              <p><span class="q-open">Schoolpodium draait gewoon.</span> <span class="q-close">En als ik iets vraag, heb ik dezelfde dag antwoord.</span></p>
-              <footer>Een schoolprogrammator. Zo klinkt gemeengoed.</footer>
-            </blockquote>
-          </li>
-          <li class="work work--mid">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2020</span></p>
-            <div class="work-main">
-              <h3><a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a></h3>
-              <p class="work-text">Gelanceerd in de eerste dagen van covid voor de woonzorgsector. Uitgegroeid tot een inspiratiebron voor animatoren, met een boek erbij.</p>
-              <p class="fact"><span class="fig">2.200</span> <span class="fact-text">actieve gebruikers per maand.</span></p>
-            </div>
-          </li>
-          <li class="work work--background">
-            <p class="when"><span class="when-word">Sinds</span> <span class="when-year">2009</span></p>
-            <div class="work-main">
-              <h3><a href="https://www.prezly.com" rel="noopener">Prezly</a></h3>
-              <p class="work-text">Communicatiesoftware die Frederik mee oprichtte. Geen sociale sector, wel de plek waar hij leerde een product uit te bouwen dat honderden organisaties elke dag gebruiken.</p>
-              <p class="fact">Draait vandaag nog.</p>
-            </div>
-          </li>
-          <li class="work work--next">
-            <svg class="parcels" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0,2.5 L100,0 L99.5,100 L0.4,97.5 Z" /></svg>
-            <p class="when">Nu in opbouw</p>
-            <div class="work-main">
-              <h3>Voor vrijwilligers&shy;coördinatoren</h3>
-              <p class="work-text">Vrijwilligerscoördinatoren verliezen elke maand dagen aan rondklikken in planningssoftware die voor uitzendkantoren gemaakt is. Die tijd hoort naar hun vrijwilligers te gaan. We bouwen een tool waarmee ze hun planning veel sneller rond krijgen.</p>
-            </div>
-          </li>
-        </ul>
+      </div>
+      <ul class="cases" id="cases" tabindex="0" aria-label="Wat we bouwden. Scroll opzij voor meer.">
+        <li class="case case--lead ground-grove">
+          <div>
+            <p class="case-when">Sinds 2019 · kinderopvang</p>
+            <h3><a href="https://opvang.vlaanderen" rel="noopener">Opvang.Vlaanderen</a></h3>
+            <p class="case-text">Alleen de grote steden konden zich een eigen systeem voor kinderopvang veroorloven. Kleine besturen deden het met formuliertjes en Excel. Anton bracht ze samen rond één platform, in een model waar de breedste schouders de grootste last dragen.</p>
+            <p class="case-note">Een gebruikersraad beslist mee.</p>
+          </div>
+          <p class="case-impact"><span class="fig">200</span> <span class="fig-label">lokale besturen op één platform</span></p>
+        </li>
+        <li class="case case--quote ground-sage">
+          <figure>
+            <blockquote><p>Opvang Vlaanderen is van ons, niet van jullie.</p></blockquote>
+            <figcaption>De gebruikersraad van Opvang.Vlaanderen. Zo klinkt gemeengoed.</figcaption>
+          </figure>
+        </li>
+        {/* Schoolpodium is Nico's werk: enkel tonen in de variant waar Nico mee aan tafel zit. */}
+        {metNico && (
+        <li class="case case--mid ground-meadow">
+          <div>
+            <p class="case-when">Sinds 2018 · cultuur</p>
+            <h3><a href="https://schoolpodium.be" rel="noopener">Schoolpodium</a></h3>
+            <p class="case-text">Schoolprogrammatoren van culturele centra plannen er hun schoolvoorstellingen, volgen inschrijvingen van leerkrachten op en sturen evaluaties. Nico bouwde het samen met de centra en onderhoudt het sindsdien als een goede huisvader.</p>
+            <p class="case-note">Samen 1.140 schoolactiviteiten dit schooljaar.</p>
+          </div>
+          <p class="case-impact"><span class="fig">26</span> <span class="fig-label">culturele centra</span></p>
+        </li>
+        )}
+        {/* Placeholder: verzonnen citaat. Vervang door een echte uitspraak voor dit publiek gaat. */}
+        {metNico && (
+        <li class="case case--quote ground-forest">
+          <figure>
+            <blockquote><p>Schoolpodium draait gewoon. En als ik iets vraag, heb ik dezelfde dag antwoord.</p></blockquote>
+            <figcaption>Een schoolprogrammator. Zo klinkt gemeengoed.</figcaption>
+          </figure>
+        </li>
+        )}
+        <li class="case case--mid ground-dawn">
+          <div>
+            <p class="case-when">Sinds 2020 · woonzorg</p>
+            <h3><a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a></h3>
+            <p class="case-text">Gelanceerd in de eerste dagen van covid voor de woonzorgsector. Uitgegroeid tot een inspiratiebron voor animatoren, met een boek erbij.</p>
+          </div>
+          <p class="case-impact"><span class="fig">2.200</span> <span class="fig-label">actieve gebruikers per maand</span></p>
+        </li>
+        <li class="case case--small ground-forest">
+          <div>
+            <p class="case-when">Sinds 2009 · communicatie</p>
+            <h3><a href="https://www.prezly.com" rel="noopener">Prezly</a></h3>
+            <p class="case-text">Communicatiesoftware die Frederik mee oprichtte. Geen sociale sector, wel de plek waar hij leerde een product uit te bouwen dat honderden organisaties elke dag gebruiken.</p>
+          </div>
+        </li>
+        <li class="case case--next">
+          <svg class="parcels" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0,1 L100,0 L99.5,100 L0.3,100 Z" /></svg>
+          <p class="case-soon">Nu in opbouw</p>
+          <h3>Voor vrijwilligers&shy;coördinatoren</h3>
+          <p class="case-text">Vrijwilligerscoördinatoren verliezen elke maand dagen aan rondklikken in planningssoftware die voor uitzendkantoren gemaakt is. Die tijd hoort naar hun vrijwilligers te gaan. We bouwen een tool waarmee ze hun planning veel sneller rond krijgen.</p>
+        </li>
+      </ul>
+      <div class="canvas">
+        <div class="boundary" aria-hidden="true"><span class="stone"></span><span class="stone"></span></div>
+        <div class="cases-controls" hidden>
+          <div class="cases-stones" aria-hidden="true"></div>
+          <div class="cases-buttons">
+            <button class="cases-btn" type="button" data-step="-1" aria-controls="cases" aria-label="Vorige">
+              <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8H2.5M7 3.5 2.5 8 7 12.5"/></svg>
+            </button>
+            <button class="cases-btn cases-btn--next" type="button" data-step="1" aria-controls="cases" aria-label="Volgende">
+              <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10.5M9 3.5 13.5 8 9 12.5"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
-    )}
 
     <section class="beat wie ground-paper" aria-labelledby="wie">
       <div class="canvas">
@@ -1988,5 +2103,6 @@ const schema = {
 
   <footer class="colophon ground-forest">&copy; 2026 De lieve jongens van Gemeen Goed</footer>
   <script is:inline src="/scripts/gaze.js" defer></script>
+  <script is:inline src="/scripts/cases.js" defer></script>
 </body>
 </html>
