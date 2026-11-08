@@ -835,6 +835,8 @@ const schema = {
     --edge: max(var(--pad), (100% - 72rem) / 2);
     /* How far the quote's plot is laid over the case it belongs to. */
     --overlap: 1.75rem;
+    /* The strip of ground between two plots. */
+    --plot-gap: clamp(1.125rem, 2.2vw, 2rem);
     padding-block: clamp(4.5rem, 12vh, 8rem);
   }
 
@@ -860,7 +862,7 @@ const schema = {
     display: flex;
     /* On a phone one plot fills the view, so they share a height and nothing jumps. */
     align-items: stretch;
-    gap: 9px;
+    gap: var(--plot-gap);
     margin-top: clamp(2.5rem, 6vw, 4rem);
     padding-inline: var(--edge);
     padding-bottom: 1rem;
@@ -893,7 +895,7 @@ const schema = {
     flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
-    width: min(var(--w), 100vw - 2 * var(--pad) - 2.5rem);
+    width: min(var(--w), 100vw - 2 * var(--pad) - var(--plot-gap) - 2rem);
     min-height: calc(var(--h) * 0.72);
     padding: clamp(1.5rem, 3.5vw, 3rem);
     background: var(--bg);
@@ -915,7 +917,7 @@ const schema = {
     position: relative;
     z-index: 1;
     align-self: flex-end;
-    margin-left: calc(-1 * var(--overlap));
+    margin-left: calc(-1 * (var(--overlap) + var(--plot-gap)));
   }
 
   .case:has(+ .case--quote) {
@@ -1882,7 +1884,7 @@ const schema = {
           </div>
           <p class="case-impact"><span class="fig">200</span> <span class="fig-label">lokale besturen op één platform</span></p>
         </li>
-        <li class="case case--quote ground-dawn">
+        <li class="case case--quote ground-sage">
           <figure>
             <blockquote><p>Opvang Vlaanderen is van ons, niet van jullie.</p></blockquote>
             <figcaption>De gebruikersraad van Opvang.Vlaanderen. Zo klinkt gemeengoed.</figcaption>
@@ -1890,7 +1892,7 @@ const schema = {
         </li>
         {/* Schoolpodium is Nico's werk: enkel tonen in de variant waar Nico mee aan tafel zit. */}
         {metNico && (
-        <li class="case case--mid ground-sage">
+        <li class="case case--mid ground-meadow">
           <div>
             <p class="case-when">Sinds 2018 · cultuur</p>
             <h3><a href="https://schoolpodium.be" rel="noopener">Schoolpodium</a></h3>
@@ -1902,14 +1904,14 @@ const schema = {
         )}
         {/* Placeholder: verzonnen citaat. Vervang door een echte uitspraak voor dit publiek gaat. */}
         {metNico && (
-        <li class="case case--quote ground-ink">
+        <li class="case case--quote ground-forest">
           <figure>
             <blockquote><p>Schoolpodium draait gewoon. En als ik iets vraag, heb ik dezelfde dag antwoord.</p></blockquote>
             <figcaption>Een schoolprogrammator. Zo klinkt gemeengoed.</figcaption>
           </figure>
         </li>
         )}
-        <li class="case case--mid ground-meadow">
+        <li class="case case--mid ground-dawn">
           <div>
             <p class="case-when">Sinds 2020 · woonzorg</p>
             <h3><a href="https://hartverwarmers.be" rel="noopener">Hartverwarmers</a></h3>
